@@ -2,7 +2,8 @@ import React from 'react'
 import { Button } from './ui/button'
 export default function BookmarkCard() {
     return (
-        <div className='bg-neutral-50 border border-gray aspect-video rounded-xl p-4'>
+        <div className='bg-neutral-50 border border-gray aspect-video rounded-xl p-4 hover:rounded-none hover:-translate-y-1 transition-all duration-300 relative'>
+
             <div className='flex justify-between '>
                 <div className=''>
                     <h2 className='text-lg font-bold'>Slack</h2>
@@ -22,6 +23,7 @@ export default function BookmarkCard() {
                     <Button className=" h-[27px] cursor-pointer px-2 py-0 rounded text-sm text-white" tooltip='Delete bookmark'><img src="/assets/icons/trash.svg" alt="" /></Button>
                 </div>
             </div>
+
         </div>
     )
 }
