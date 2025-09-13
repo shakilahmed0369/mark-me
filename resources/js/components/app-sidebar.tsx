@@ -31,6 +31,10 @@ const data = {
           title: "Categories",
           url: "/categories",
         },
+        {
+          title: "Create Bookmark",
+          url: "/create-bookmark",
+        },
       ],
     },
   ],

@@ -3,6 +3,7 @@ import MainLayout from '../layouts/MainLayout';
 import { Route, Routes } from 'react-router-dom';
 import Home from '../pages/Home';
 import Category from '../pages/Category';
+import CreateBookmark from '../pages/CreateBookmark';
 // import { Switch } from "@/components/ui/switch"
 function App() {
 
@@ -11,6 +12,7 @@ function App() {
             <Route element={<MainLayout />}>
                 <Route path="/" element={<Home/>} />
                 <Route path="/categories" element={<Category/>} />
+                <Route path="/create-bookmark" element={<CreateBookmark/>} />
             </Route>
         </Routes>
     );
