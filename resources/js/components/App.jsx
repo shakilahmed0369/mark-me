@@ -5,7 +5,7 @@ import Home from '../pages/Home';
 import Category from '../pages/Category';
 import CreateBookmark from '../pages/CreateBookmark';
 import CategoryProvider from '../context/CategoryProvider';
-// import { Switch } from "@/components/ui/switch"
+
 function App() {
 
     return (

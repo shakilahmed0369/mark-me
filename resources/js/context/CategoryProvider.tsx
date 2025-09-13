@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { CategoryContext } from "./CategoryContext";
+import { CategoryContext, Category } from "./CategoryContext";
 
-export default function CategoryProvider({ children }) {
-    const [categories, setCategories] = useState([]);
+export default function CategoryProvider({ children }: { children: React.ReactNode }) {
+    const [categories, setCategories] = useState<Category[]>([]);
     const [categoryName, setCategoryName] = useState('');
     const [categoryIcon, setCategoryIcon] = useState('');
 

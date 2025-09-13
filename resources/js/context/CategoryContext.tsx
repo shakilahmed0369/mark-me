@@ -1,6 +1,6 @@
 import { createContext, Dispatch, SetStateAction } from "react";
 
-interface Category {
+export interface Category {
     id: string | number;
     name: string;
     icon: string;
