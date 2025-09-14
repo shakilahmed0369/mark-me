@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label"
 import { CategoryContext } from '@/context/CategoryContext'
 
 export default function CategoryDialog() {
-    const { categoryName, setCategoryName, categoryIcon, setCategoryIcon } = useContext(CategoryContext);
+    const { categoryName, setCategoryName, categoryIcon, setCategoryIcon, createCategory } = useContext(CategoryContext);
 
     const defaultIcons = [
         { name: 'books', filename: 'books.svg', path: '/assets/default-icons/books.svg' },
@@ -73,7 +73,7 @@ export default function CategoryDialog() {
                         <DialogClose asChild>
                             <Button variant="outline">Cancel</Button>
                         </DialogClose>
-                        <Button type="submit">Save changes</Button>
+                        <Button type="submit" onClick={createCategory}>Save changes</Button>
                     </DialogFooter>
                 </DialogContent>
             </form>
