@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -17,6 +17,7 @@ import { CategoryContext } from '@/context/CategoryContext'
 
 export default function CategoryDialog() {
     const { categoryName, setCategoryName, categoryIcon, setCategoryIcon, createCategory } = useContext(CategoryContext);
+    const [open, setOpen] = useState(false);
 
     const defaultIcons = [
         { name: 'books', filename: 'books.svg', path: '/assets/default-icons/books.svg' },
@@ -37,7 +38,7 @@ export default function CategoryDialog() {
     ];
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <form>
                 <DialogTrigger asChild>
                     <Button variant="outline">Add new</Button>
@@ -73,7 +74,7 @@ export default function CategoryDialog() {
                         <DialogClose asChild>
                             <Button variant="outline">Cancel</Button>
                         </DialogClose>
-                        <Button type="submit" onClick={createCategory}>Save changes</Button>
+                        <Button type="submit" onClick={() => createCategory(() => setOpen(false))}>Save changes</Button>
                     </DialogFooter>
                 </DialogContent>
             </form>

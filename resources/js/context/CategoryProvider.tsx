@@ -8,7 +8,7 @@ export default function CategoryProvider({ children }: { children: React.ReactNo
     const [categoryName, setCategoryName] = useState('');
     const [categoryIcon, setCategoryIcon] = useState('');
 
-    const createCategory = async () => {
+    const createCategory = async (onSuccess?: () => void) => {
         await axios.post('/api/categories', {
             name: categoryName,
             icon: categoryIcon
@@ -16,6 +16,9 @@ export default function CategoryProvider({ children }: { children: React.ReactNo
             toast.success(response.data.message, { position: 'bottom-right' });
             setCategoryName('');
             setCategoryIcon('');
+            if(onSuccess) {
+                onSuccess();
+            }
         }).catch(function (error) {
             console.log(error.response.data.errors);
             const errors = error.response.data.errors;
