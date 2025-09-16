@@ -7,13 +7,21 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Category } from '@/context/CategoryContext'
 
-export default function CategoryCard() {
+interface CategoryCardProps {
+    category: Category
+    setDialogOpen: (dialogOpen: boolean) => void
+    setEditData: (category: Category) => void
+    setDialogMode: (dialogMode: "create" | "edit") => void
+}
+
+export default function CategoryCard({ category, setDialogOpen, setEditData, setDialogMode }: CategoryCardProps) {
     return (
         <div className='relative bg-neutral-50 h-[136px] w-full border border-gray aspect-video rounded-xl p-4 hover:rounded-none hover:-translate-y-1 transition-all duration-300'>
             <div className='flex justify-between items-center'>
-                <h1 className='text-lg font-bold'>Programming</h1>
-                <img className='w-[40px]' src="/assets/icons/folder.svg" alt="" />
+                <h1 className='text-lg font-bold'>{category.name}</h1>
+                <img className='w-[40px]' src={`/assets/default-icons/${category.icon}.svg`} alt="" />
             </div>
             <div className='mt-5'>
                 <span className='px-3 py-1 bg-black rounded-sm text-white'>10 bookmarks</span>
@@ -26,7 +34,11 @@ export default function CategoryCard() {
                     <DropdownMenuContent>
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => {
+                            setEditData(category)
+                            setDialogMode("edit")
+                            setDialogOpen(true)
+                        }}>Edit</DropdownMenuItem>
                         <DropdownMenuItem className='text-red-500'>Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

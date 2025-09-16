@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CategoryContext, Category } from "./CategoryContext";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -7,6 +7,21 @@ export default function CategoryProvider({ children }: { children: React.ReactNo
     const [categories, setCategories] = useState<Category[]>([]);
     const [categoryName, setCategoryName] = useState('');
     const [categoryIcon, setCategoryIcon] = useState('');
+
+
+    useEffect(() => {
+        getCategories();
+    }, []);
+
+    const getCategories = async () => {
+        await axios.get('/api/categories').then(function (response) {
+            console.log(response.data.data);
+            setCategories(response.data.data);
+        }).catch(function (error) {
+            console.log(error);
+            toast.error(error.response.data.message, { position: 'bottom-right' });
+        });
+    }
 
     const createCategory = async (onSuccess?: () => void) => {
         await axios.post('/api/categories', {

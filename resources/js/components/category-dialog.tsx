@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -13,11 +13,18 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { CategoryContext } from '@/context/CategoryContext'
+import { Category, CategoryContext } from '@/context/CategoryContext'
 
-export default function CategoryDialog() {
+interface CategoryDialogProps {
+    dialogOpen: boolean
+    setDialogOpen: (dialogOpen: boolean) => void
+    dialogMode: "edit" | "create"
+    editData: Category | null
+}
+
+export default function CategoryDialog({ dialogOpen, setDialogOpen, dialogMode, editData }: CategoryDialogProps) {
+
     const { categoryName, setCategoryName, categoryIcon, setCategoryIcon, createCategory } = useContext(CategoryContext);
-    const [open, setOpen] = useState(false);
 
     const defaultIcons = [
         { name: 'books', filename: 'books.svg', path: '/assets/default-icons/books.svg' },
@@ -37,17 +44,21 @@ export default function CategoryDialog() {
         { name: 'Television', filename: 'Television.svg', path: '/assets/default-icons/Television.svg' },
     ];
 
+    useEffect(() => {
+        if (editData) {
+            setCategoryName(editData.name)
+            setCategoryIcon(editData.icon)
+        }
+    }, [editData])
+
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <form>
-                <DialogTrigger asChild>
-                    <Button variant="outline">Add new</Button>
-                </DialogTrigger>
                 <DialogContent className="lg:max-w-[700px]">
                     <DialogHeader>
-                        <DialogTitle>Add new category</DialogTitle>
+                        <DialogTitle>{dialogMode == "create" ? "Add new category" : "Edit category"}</DialogTitle>
                         <DialogDescription>
-                            Add a new category to organize your bookmarks
+                            {dialogMode == "create" ? "Add a new category to organize your bookmarks" : "Edit category details"}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4">
