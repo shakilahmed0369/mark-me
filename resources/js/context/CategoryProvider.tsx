@@ -5,9 +5,6 @@ import { toast } from "react-toastify";
 
 export default function CategoryProvider({ children }: { children: React.ReactNode }) {
     const [categories, setCategories] = useState<Category[]>([]);
-    const [categoryName, setCategoryName] = useState('');
-    const [categoryIcon, setCategoryIcon] = useState('');
-
 
     useEffect(() => {
         getCategories();
@@ -23,24 +20,26 @@ export default function CategoryProvider({ children }: { children: React.ReactNo
         });
     }
 
-    const createCategory = async (onSuccess?: () => void) => {
-        await axios.post('/api/categories', {
-            name: categoryName,
-            icon: categoryIcon
-        }).then(function (response) {
+    const createCategory = async (data: { name: string; icon: string }) => {
+        try {
+
+            const response = await axios.post('/api/categories', data);
+            setCategories((prev) => [...prev, response.data.category]);
             toast.success(response.data.message, { position: 'bottom-right' });
-            setCategoryName('');
-            setCategoryIcon('');
-            if(onSuccess) {
-                onSuccess();
-            }
-        }).catch(function (error) {
-            console.log(error.response.data.errors);
+            return true;
+        } catch (error: any) {
+            console.log(error);
             const errors = error.response.data.errors;
-            for (const key in errors) {
-                toast.error(errors[key][0], { position: 'bottom-right' });
+            if (errors) {
+                for (const key in errors) {
+                    toast.error(errors[key][0], { position: 'bottom-right' });
+                }
+            } else {
+                toast.error("Something went wrong!", { position: 'bottom-right' });
             }
-        });
+
+            return false;
+        }
     }
 
     return (
@@ -48,10 +47,6 @@ export default function CategoryProvider({ children }: { children: React.ReactNo
             {
                 categories,
                 setCategories,
-                categoryName,
-                setCategoryName,
-                categoryIcon,
-                setCategoryIcon,
                 createCategory
             }
         }>

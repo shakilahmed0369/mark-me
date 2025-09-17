@@ -24,7 +24,9 @@ interface CategoryDialogProps {
 
 export default function CategoryDialog({ dialogOpen, setDialogOpen, dialogMode, editData }: CategoryDialogProps) {
 
-    const { categoryName, setCategoryName, categoryIcon, setCategoryIcon, createCategory } = useContext(CategoryContext);
+    const { createCategory } = useContext(CategoryContext);
+    const [categoryName, setCategoryName] = useState('');
+    const [categoryIcon, setCategoryIcon] = useState('');
 
     const defaultIcons = [
         { name: 'books', filename: 'books.svg', path: '/assets/default-icons/books.svg' },
@@ -53,42 +55,71 @@ export default function CategoryDialog({ dialogOpen, setDialogOpen, dialogMode, 
 
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <form>
-                <DialogContent className="lg:max-w-[700px]">
-                    <DialogHeader>
-                        <DialogTitle>{dialogMode == "create" ? "Add new category" : "Edit category"}</DialogTitle>
-                        <DialogDescription>
-                            {dialogMode == "create" ? "Add a new category to organize your bookmarks" : "Edit category details"}
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4">
-                        <div className="grid gap-3">
-                            <Label htmlFor="name-1">Category Name</Label>
-                            <Input id="name-1" name="name" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} />
-                        </div>
-                        <div className="grid gap-3">
-                            <Label htmlFor="name-1">Choose a Icon</Label>
-                            <div className='grid grid-cols-12 gap-2 border p-4'>
-                                {defaultIcons.map((icon) => (
-                                    <span
-                                        key={icon.name}
-                                        className={`border p-1 rounded-sm cursor-pointer hover:bg-gray-100 ${categoryIcon === icon.name ? 'ring-2 ring-blue-500' : ''}`}
-                                        onClick={() => setCategoryIcon(icon.name)}
-                                    >
-                                        <img className='max-w-[30px]' src={icon.path} alt={icon.name} />
-                                    </span>
-                                ))}
-                            </div>
+            <DialogContent className="lg:max-w-[700px]">
+                <DialogHeader>
+                    <DialogTitle>
+                        {dialogMode === "create" ? "Add new category" : "Edit category"}
+                    </DialogTitle>
+                    <DialogDescription>
+                        {dialogMode === "create"
+                            ? "Add a new category to organize your bookmarks"
+                            : "Edit category details"}
+                    </DialogDescription>
+                </DialogHeader>
+
+                {/* 👇 Form starts here */}
+                <form
+                    onSubmit={async (e) => {
+                        e.preventDefault();
+                        const success = await createCategory({
+                            name: categoryName,
+                            icon: categoryIcon,
+                        });
+                        if (success) {
+                            setCategoryName("");
+                            setCategoryIcon("");
+                            setDialogOpen(false);
+                        }
+                    }}
+                    className="grid gap-4"
+                >
+                    <div className="grid gap-3">
+                        <Label htmlFor="name-1">Category Name</Label>
+                        <Input
+                            id="name-1"
+                            name="name"
+                            value={categoryName}
+                            onChange={(e) => setCategoryName(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="grid gap-3">
+                        <Label>Choose an Icon</Label>
+                        <div className="grid grid-cols-12 gap-2 border p-4">
+                            {defaultIcons.map((icon) => (
+                                <span
+                                    key={icon.name}
+                                    className={`border p-1 rounded-sm cursor-pointer hover:bg-gray-100 ${categoryIcon === icon.name ? "ring-2 ring-blue-500" : ""
+                                        }`}
+                                    onClick={() => setCategoryIcon(icon.name)}
+                                >
+                                    <img className="max-w-[30px]" src={icon.path} alt={icon.name} />
+                                </span>
+                            ))}
                         </div>
                     </div>
+
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button variant="outline">Cancel</Button>
+                            <Button type="button" variant="outline">
+                                Cancel
+                            </Button>
                         </DialogClose>
-                        <Button type="submit" onClick={() => createCategory(() => setOpen(false))}>Save changes</Button>
+                        <Button type="submit">Save changes</Button>
                     </DialogFooter>
-                </DialogContent>
-            </form>
+                </form>
+            </DialogContent>
         </Dialog>
+
     )
 }
