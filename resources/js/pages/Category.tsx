@@ -21,11 +21,16 @@ export default function Category() {
                     <p className='text-lg text-gray-500'>Organize your bookmarks by category</p>
                 </div>
                 <div className='flex'>
-                    <Button onClick={() => setDialogOpen(true)}>Add new</Button>
+                    <Button onClick={() => {
+                        console.log("Add new category")
+                        setDialogOpen(true)
+                        setDialogMode("create")
+                        setEditData(null)
+                    }}>Add new</Button>
                 </div>
             </div>
 
-            <div className='grid grid-cols-5 gap-3'>
+            <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3'>
                 {
                     categories?.map((category) => (
                         <CategoryCard key={category.id}

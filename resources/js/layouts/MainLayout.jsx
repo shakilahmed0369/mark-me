@@ -27,7 +27,7 @@ export default function MainLayout() {
 
                     <div className="flex justify-between w-full">
                         <div>
-                            <Input placeholder="Search bookmarks" type="text" className="w-2xl h-[50px]" />
+                            <Input placeholder="Search bookmarks" type="text" className="lg:w-2xl md:2 sm:w-1/3 w-full h-[50px]" />
                         </div>
                         <div>
                             <Button className="h-[50px]">New Bookmark</Button>

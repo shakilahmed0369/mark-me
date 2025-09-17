@@ -50,6 +50,9 @@ export default function CategoryDialog({ dialogOpen, setDialogOpen, dialogMode, 
         if (editData) {
             setCategoryName(editData.name)
             setCategoryIcon(editData.icon)
+        }else {
+            setCategoryName("");
+            setCategoryIcon("");
         }
     }, [editData])
 
@@ -111,7 +114,7 @@ export default function CategoryDialog({ dialogOpen, setDialogOpen, dialogMode, 
 
                     <div className="grid gap-3">
                         <Label>Choose an Icon</Label>
-                        <div className="grid grid-cols-12 gap-2 border p-4">
+                        <div className="grid grid-cols-6 md:grid-cols-8 lg:grid-cols-12 gap-2 border p-4">
                             {defaultIcons.map((icon) => (
                                 <span
                                     key={icon.name}
