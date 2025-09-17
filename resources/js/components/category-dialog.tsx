@@ -24,7 +24,7 @@ interface CategoryDialogProps {
 
 export default function CategoryDialog({ dialogOpen, setDialogOpen, dialogMode, editData }: CategoryDialogProps) {
 
-    const { createCategory } = useContext(CategoryContext);
+    const { createCategory, updateCategory } = useContext(CategoryContext);
     const [categoryName, setCategoryName] = useState('');
     const [categoryIcon, setCategoryIcon] = useState('');
 
@@ -53,6 +53,31 @@ export default function CategoryDialog({ dialogOpen, setDialogOpen, dialogMode, 
         }
     }, [editData])
 
+    const handleSubmit = async () => {
+        if (dialogMode == "create") {
+            const success = await createCategory({
+                name: categoryName,
+                icon: categoryIcon,
+            });
+            if (success) {
+                setCategoryName("");
+                setCategoryIcon("");
+                setDialogOpen(false);
+            }
+        } else {
+            if (editData) {
+                const success = await updateCategory({
+                    id: editData.id,
+                    name: categoryName,
+                    icon: categoryIcon,
+                });
+                if (success) {
+                    setDialogOpen(false);
+                }
+            }
+        }
+    }
+
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogContent className="lg:max-w-[700px]">
@@ -67,19 +92,10 @@ export default function CategoryDialog({ dialogOpen, setDialogOpen, dialogMode, 
                     </DialogDescription>
                 </DialogHeader>
 
-                {/* 👇 Form starts here */}
                 <form
                     onSubmit={async (e) => {
                         e.preventDefault();
-                        const success = await createCategory({
-                            name: categoryName,
-                            icon: categoryIcon,
-                        });
-                        if (success) {
-                            setCategoryName("");
-                            setCategoryIcon("");
-                            setDialogOpen(false);
-                        }
+                        await handleSubmit();
                     }}
                     className="grid gap-4"
                 >

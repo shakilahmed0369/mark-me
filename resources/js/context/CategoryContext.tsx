@@ -14,6 +14,7 @@ interface CategoryContextType {
     categoryIcon: string;
     setCategoryIcon: Dispatch<SetStateAction<string>>;
     createCategory: () => Promise<void>;
+    updateCategory: () => Promise<void>;
 }
 
 export const CategoryContext = createContext<CategoryContextType | undefined>(undefined);
