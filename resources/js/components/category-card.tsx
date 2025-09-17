@@ -8,15 +8,18 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Category } from '@/context/CategoryContext'
+import ConfirmationDialog from './confirmation-dialog'
 
 interface CategoryCardProps {
     category: Category
     setDialogOpen: (dialogOpen: boolean) => void
     setEditData: (category: Category) => void
     setDialogMode: (dialogMode: "create" | "edit") => void
+    setConfirmationDialogOpen: (dialogOpen: boolean) => void
+    setCategoryToDelete: (category: Category | null) => void
 }
 
-export default function CategoryCard({ category, setDialogOpen, setEditData, setDialogMode }: CategoryCardProps) {
+export default function CategoryCard({ category, setDialogOpen, setEditData, setDialogMode, setConfirmationDialogOpen, setCategoryToDelete }: CategoryCardProps) {
     return (
         <div className='relative bg-neutral-50 h-[136px] w-full border border-gray aspect-video rounded-xl p-4 hover:rounded-none hover:-translate-y-1 transition-all duration-300'>
             <div className='flex justify-between items-center'>
@@ -39,10 +42,16 @@ export default function CategoryCard({ category, setDialogOpen, setEditData, set
                             setDialogMode("edit")
                             setDialogOpen(true)
                         }}>Edit</DropdownMenuItem>
-                        <DropdownMenuItem className='text-red-500'>Delete</DropdownMenuItem>
+                        <DropdownMenuItem className='text-red-500' onClick={() => {
+                            setConfirmationDialogOpen(true)
+                            setCategoryToDelete(category)
+                        }}>Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
+
+
         </div>
+
     )
 }

@@ -1,14 +1,17 @@
 import CategoryCard from '@/components/category-card'
 import CategoryDialog from '@/components/category-dialog'
+import ConfirmationDialog from '@/components/confirmation-dialog';
 import { Button } from '@/components/ui/button';
 import { Category, CategoryContext } from '@/context/CategoryContext';
 import React, { useContext, useState } from 'react'
 
 export default function Category() {
-    const { categories } = useContext(CategoryContext) || {};
+    const { categories, deleteCategory } = useContext(CategoryContext) || {};
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogMode, setDialogMode] = useState<"edit" | "create">("create");
     const [editData, setEditData] = useState<Category | null>(null);
+    const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+    const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
 
     return (
         <>
@@ -30,6 +33,8 @@ export default function Category() {
                             setDialogOpen={setDialogOpen}
                             setEditData={setEditData}
                             setDialogMode={setDialogMode}
+                            setConfirmationDialogOpen={setConfirmationDialogOpen}
+                            setCategoryToDelete={setCategoryToDelete}
                         />
                     ))
                 }
@@ -41,6 +46,17 @@ export default function Category() {
                 setDialogOpen={setDialogOpen}
                 dialogMode={dialogMode}
                 editData={editData}
+            />
+            <ConfirmationDialog
+                dialogOpen={confirmationDialogOpen}
+                setDialogOpen={setConfirmationDialogOpen}
+                callback={() => {
+                    setConfirmationDialogOpen(false)
+                    if (categoryToDelete) {
+                        deleteCategory(categoryToDelete.id)
+                    }
+                    setCategoryToDelete(null);
+                }}
             />
         </>
     )

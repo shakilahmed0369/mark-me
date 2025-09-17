@@ -63,13 +63,26 @@ export default function CategoryProvider({ children }: { children: React.ReactNo
         }
     }
 
+    const deleteCategory = async (id: number) => {
+        try {
+            const response = await axios.delete(`/api/categories/${id}`);
+            setCategories((prev) => prev.filter((item) => item.id !== id));
+            toast.success(response.data.message, { position: 'bottom-right' });
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
+
     return (
         <CategoryContext.Provider value={
             {
                 categories,
                 setCategories,
                 createCategory,
-                updateCategory
+                updateCategory,
+                deleteCategory
             }
         }>
             {children}
