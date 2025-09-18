@@ -15,15 +15,17 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 
 export default function CreateBookmark() {
-    const { getUrlInfo, urlInfoLoading } = useContext(BookmarkContext);
+    const { getUrlInfo, urlInfoLoading, createBookmark } = useContext(BookmarkContext);
     const [siteInfo, setSiteInfo] = useState<{
         title: string;
         description: string;
-        favicon: string;
+        favicon: File | string | null;
+        category: string | null;
     }>({
         title: '',
         description: '',
-        favicon: '',
+        favicon: null,
+        category: null,
     });
     const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
     const [url, setUrl] = useState("");
@@ -52,6 +54,22 @@ export default function CreateBookmark() {
         }
     };
 
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const response = await createBookmark(siteInfo);
+        if (response) {
+            toast.success('Bookmark created successfully', { position: 'bottom-right' });
+            setSiteInfo({
+                title: '',
+                description: '',
+                favicon: null,
+                category: null,
+            });
+            setUrl('');
+        }
+    }
+
+
 
 
     return (
@@ -75,7 +93,8 @@ export default function CreateBookmark() {
                                     setSiteInfo({
                                         title: '',
                                         description: '',
-                                        favicon: '',
+                                        favicon: null,
+                                        category: null,
                                     });
 
                                     const info = await getUrlInfo(url);
@@ -87,7 +106,7 @@ export default function CreateBookmark() {
                         </div>
                     </div>
 
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <div className="grid gap-3 mt-3">
                             <Label htmlFor="title">Title</Label>
                             <Input id="title" name="title" placeholder='Figma' value={siteInfo.title} onChange={(e) => setSiteInfo({ ...siteInfo, title: e.target.value })} />
@@ -100,13 +119,16 @@ export default function CreateBookmark() {
 
                         <div className="grid gap-3 mt-3">
                             <Label htmlFor="url">Category</Label>
-                            <Select >
+                            <Select
+                                onValueChange={(value) => setSiteInfo({ ...siteInfo, category: value })}
+                                value={siteInfo.category ?? undefined}
+                            >
                                 <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Select" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent >
                                     {categories.map((category) => (
-                                        <SelectItem key={category.id} value={category.name}>{category.name}</SelectItem>
+                                        <SelectItem key={category.id} value={category.id}>{category.name}</SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
@@ -115,7 +137,7 @@ export default function CreateBookmark() {
                             siteInfo.favicon && (
                                 <div className="grid gap-3 mt-3 ">
                                     <Label htmlFor="url">Preview</Label>
-                                    <img src={siteInfo.favicon} className='w-[70px] bg-gray-50 border border-1 p-2 rounded-2xl' alt={siteInfo.title} />
+                                    <img src={typeof siteInfo.favicon === 'string' ? siteInfo.favicon : URL.createObjectURL(siteInfo.favicon)} className='w-[70px] bg-gray-50 border border-1 p-2 rounded-2xl' alt={siteInfo.title} />
                                 </div>
                             )
                         }

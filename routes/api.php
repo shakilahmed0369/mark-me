@@ -9,3 +9,4 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource('categories', \App\Http\Controllers\Api\CategoryController::class);
 Route::post('get-url-info', \App\Http\Controllers\Api\UrlInfoController::class);
+Route::apiResource('bookmarks', \App\Http\Controllers\Api\BookmarkController::class);
