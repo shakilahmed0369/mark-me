@@ -15,9 +15,9 @@ import { Loader2Icon } from 'lucide-react'
 export default function CreateBookmark() {
     const { getUrlInfo, urlInfoLoading } = useContext(BookmarkContext);
     const [siteInfo, setSiteInfo] = useState<{
-        title: string;
-        description: string;
-        favicon: string;
+        title: string | null;
+        description: string | null;
+        favicon: string | null;
     }>({
         title: '',
         description: '',
@@ -61,7 +61,9 @@ export default function CreateBookmark() {
                                     });
 
                                     const info = await getUrlInfo(url);
-                                    setSiteInfo(info);
+                                    if (info) {
+                                        setSiteInfo(info);
+                                    }
                                 }}>Fetch Website Data</Button>
                             }
                         </div>
