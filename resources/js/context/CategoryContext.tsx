@@ -1,20 +1,12 @@
 import { createContext, Dispatch, SetStateAction } from "react";
-
-export interface Category {
-    id: string | number;
-    name: string;
-    icon: string;
-}
+import { Category } from "../types";
 
 interface CategoryContextType {
     categories: Category[];
     setCategories: Dispatch<SetStateAction<Category[]>>;
-    categoryName: string;
-    setCategoryName: Dispatch<SetStateAction<string>>;
-    categoryIcon: string;
-    setCategoryIcon: Dispatch<SetStateAction<string>>;
-    createCategory: () => Promise<void>;
-    updateCategory: () => Promise<void>;
+    createCategory: (data: { name: string; icon: string }) => Promise<boolean>;
+    updateCategory: (data: { id: number, name: string, icon: string }) => Promise<boolean>;
+    deleteCategory: (id: number) => Promise<boolean>;
 }
 
 export const CategoryContext = createContext<CategoryContextType | undefined>(undefined);

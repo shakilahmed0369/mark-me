@@ -1,21 +1,14 @@
 import React, { useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import BookmarkCard from "@/components/bookmark-card"
+import { useBookmark } from '@/hooks/useBookmark';
 
-import { useState } from 'react';
-import axios from 'axios';
 export default function Home() {
-    const [bookmarks, setBookmarks] = useState([]);
+    const { bookmarks, getBookmarks } = useBookmark();
 
     useEffect(() => {
         getBookmarks();
-
-    }, [bookmarks]);
-
-    const getBookmarks = async () => {
-        const res = await axios.get('/api/bookmarks');
-        setBookmarks(res.data);
-    }
+    }, []);
 
     return (
         <>

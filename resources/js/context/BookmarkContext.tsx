@@ -1,10 +1,12 @@
-import { createContext } from "react";
-import { BookmarkTypes } from "./BookmarkProvider";
+import { createContext, Dispatch, SetStateAction } from "react";
+import { Bookmark, BookmarkTypes } from "../types";
 
 interface BookmarkContextType {
-    getUrlInfo: (url: string) => Promise<void>;
+    bookmarks: Bookmark[];
+    setBookmarks: Dispatch<SetStateAction<Bookmark[]>>;
+    getUrlInfo: (url: string) => Promise<any>;
     urlInfoLoading: boolean;
-    setUrlInfoLoading: (loading: boolean) => void;
-    createBookmark: (bookmark: BookmarkTypes) => Promise<void>;
+    createBookmark: (bookmark: BookmarkTypes) => Promise<any>;
+    getBookmarks: () => Promise<void>;
 }
 export const BookmarkContext = createContext<BookmarkContextType | undefined>(undefined);

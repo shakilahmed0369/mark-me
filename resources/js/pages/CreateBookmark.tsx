@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from "@/components/ui/label"
 import { Button } from '@/components/ui/button'
@@ -9,44 +9,28 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { BookmarkContext } from '@/context/BookmarkContext'
+import { useBookmark } from '@/hooks/useBookmark'
+import { useCategory } from '@/hooks/useCategory'
 import { Loader2Icon } from 'lucide-react'
-import axios from 'axios'
 import { toast } from 'react-toastify'
+import { BookmarkTypes } from '@/types'
 
 export default function CreateBookmark() {
-    const { getUrlInfo, urlInfoLoading, createBookmark } = useContext(BookmarkContext);
-    const [siteInfo, setSiteInfo] = useState<{
-        url: string;
-        title: string;
-        description: string;
-        favicon: File | string | null;
-        category: string | null;
-    }>({
+    const { getUrlInfo, urlInfoLoading, createBookmark } = useBookmark();
+    const { categories, getCategories } = useCategory();
+    const [siteInfo, setSiteInfo] = useState<BookmarkTypes>({
         url: '',
         title: '',
         description: '',
         favicon: null,
         category: null,
     });
-    const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
     const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
     const [url, setUrl] = useState("");
 
     useEffect(() => {
         getCategories();
     }, []);
-
-    const getCategories = async () => {
-        try {
-            const response = await axios.get('/api/categories');
-            // console.log('categories', response.data.data);
-            setCategories(response.data.data);
-        } catch (error) {
-            console.log(error);
-            toast.error('Failed to fetch categories', { position: 'bottom-right' });
-        }
-    }
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -69,7 +53,7 @@ export default function CreateBookmark() {
                 title: '',
                 description: '',
                 favicon: null,
-                category: '',
+                category: null,
             });
             setFaviconPreview(null);
             setUrl('');

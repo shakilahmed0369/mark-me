@@ -1,67 +1,49 @@
 import React, { useState } from "react";
 import { BookmarkContext } from "./BookmarkContext";
-import axios from "axios";
-import { toast } from "react-toastify";
-
-export interface BookmarkTypes {
-    url: string;
-    title: string;
-    description: string;
-    favicon: File | null;
-    category: string | null;
-}
+import { getUrlInfo as getUrlInfoApi, createBookmark as createBookmarkApi, getBookmarks as getBookmarksApi } from "../services/api";
+import { handleAxiosError } from "../utils/errorHandler";
+import { Bookmark, BookmarkTypes } from "../types";
 
 export default function BookmarkProvider({ children }: { children: React.ReactNode }) {
+    const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
     const [urlInfoLoading, setUrlInfoLoading] = useState(false);
+
     const getUrlInfo = async (url: string) => {
         try {
             setUrlInfoLoading(true);
-            const response = await axios.post('/api/get-url-info', { url });
-            return response.data;
+            return await getUrlInfoApi(url);
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                const errors = error.response?.data?.errors;
-                Object.entries(errors).forEach(([key, value]) => {
-                    toast.error(errors[key][0], { position: 'bottom-right' });
-                });
-            } else {
-                console.log(error);
-                toast.error('Failed to fetch url info', { position: 'bottom-right' });
-            }
+            handleAxiosError(error);
         } finally {
             setUrlInfoLoading(false);
         }
     }
+
     const createBookmark = async (bookmark: BookmarkTypes) => {
-        console.log('createBookmark', bookmark);
         try {
-            const formData = new FormData();
-            formData.append('url', bookmark.url);
-            formData.append('title', bookmark.title);
-            formData.append('description', bookmark.description);
-            formData.append('category', bookmark.category ?? '');
-            if (bookmark.favicon) {
-                formData.append('favicon', bookmark.favicon);
-            }
-            const response = await axios.post('/api/bookmarks', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                }
-            });
-            return response.data;
+            return await createBookmarkApi(bookmark);
         } catch (error) {
-            const errors = error.response.data.errors;
-            Object.entries(errors).forEach(([key, value]) => {
-                toast.error(errors[key][0], { position: 'bottom-right' });
-            });
+            handleAxiosError(error);
         }
     }
+
+    const getBookmarks = async () => {
+        try {
+            const data = await getBookmarksApi();
+            setBookmarks(data);
+        } catch (error) {
+            handleAxiosError(error);
+        }
+    }
+
     return (
         <BookmarkContext.Provider value={{
+            bookmarks,
+            setBookmarks,
             getUrlInfo,
             urlInfoLoading,
-            setUrlInfoLoading,
             createBookmark,
+            getBookmarks,
         }}>
             {children}
         </BookmarkContext.Provider>

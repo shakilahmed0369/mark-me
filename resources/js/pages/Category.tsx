@@ -2,11 +2,12 @@ import CategoryCard from '@/components/category-card'
 import CategoryDialog from '@/components/category-dialog'
 import ConfirmationDialog from '@/components/confirmation-dialog';
 import { Button } from '@/components/ui/button';
-import { Category, CategoryContext } from '@/context/CategoryContext';
-import React, { useContext, useState } from 'react'
+import { useCategory } from '@/hooks/useCategory';
+import { Category } from '@/types';
+import React, { useState } from 'react'
 
 export default function Category() {
-    const { categories, deleteCategory } = useContext(CategoryContext) || {};
+    const { categories, deleteCategory } = useCategory();
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogMode, setDialogMode] = useState<"edit" | "create">("create");
     const [editData, setEditData] = useState<Category | null>(null);
@@ -22,7 +23,6 @@ export default function Category() {
                 </div>
                 <div className='flex'>
                     <Button onClick={() => {
-                        console.log("Add new category")
                         setDialogOpen(true)
                         setDialogMode("create")
                         setEditData(null)
@@ -32,7 +32,7 @@ export default function Category() {
 
             <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3'>
                 {
-                    categories?.map((category) => (
+                    categories.map((category) => (
                         <CategoryCard key={category.id}
                             category={category}
                             setDialogOpen={setDialogOpen}
