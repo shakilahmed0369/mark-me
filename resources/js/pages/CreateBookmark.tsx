@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from "@/components/ui/label"
 import { Button } from '@/components/ui/button'
@@ -11,21 +11,37 @@ import {
 } from "@/components/ui/select"
 import { BookmarkContext } from '@/context/BookmarkContext'
 import { Loader2Icon } from 'lucide-react'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 export default function CreateBookmark() {
     const { getUrlInfo, urlInfoLoading } = useContext(BookmarkContext);
     const [siteInfo, setSiteInfo] = useState<{
-        title: string | null;
-        description: string | null;
-        favicon: string | null;
+        title: string;
+        description: string;
+        favicon: string;
     }>({
         title: '',
         description: '',
         favicon: '',
     });
-
+    const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
     const [url, setUrl] = useState("");
 
+    useEffect(() => {
+        getCategories();
+    }, []);
+
+    const getCategories = async () => {
+        try {
+            const response = await axios.get('/api/categories');
+            // console.log('categories', response.data.data);
+            setCategories(response.data.data);
+        } catch (error) {
+            console.log(error);
+            toast.error('Failed to fetch categories', { position: 'bottom-right' });
+        }
+    }
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -35,6 +51,8 @@ export default function CreateBookmark() {
             });
         }
     };
+
+
 
     return (
         <>
@@ -84,12 +102,12 @@ export default function CreateBookmark() {
                             <Label htmlFor="url">Category</Label>
                             <Select >
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Theme" />
+                                    <SelectValue placeholder="Select" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="light">Light</SelectItem>
-                                    <SelectItem value="dark">Dark</SelectItem>
-                                    <SelectItem value="system">System</SelectItem>
+                                    {categories.map((category) => (
+                                        <SelectItem key={category.id} value={category.name}>{category.name}</SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                         </div>
