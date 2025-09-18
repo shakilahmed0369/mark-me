@@ -62,6 +62,7 @@ export default function CategoryProvider({ children }: { children: React.ReactNo
         <CategoryContext.Provider value={{
             categories,
             setCategories,
+            getCategories,
             createCategory,
             updateCategory,
             deleteCategory,
