@@ -1,18 +1,30 @@
 import React from 'react'
 import { Button } from './ui/button'
-export default function BookmarkCard() {
+import { truncateText } from '@/utils/helper';
+interface BookmarkTypes {
+    id: number;
+    title: string;
+    description: string;
+    url: string;
+    category: string;
+    favicon: string;
+    favicon_type: string;
+}
+
+export default function BookmarkCard({ bookmark }: { bookmark: BookmarkTypes }) {
     return (
         <div className='bg-neutral-50 border border-gray aspect-video rounded-xl p-4 hover:rounded-none hover:-translate-y-1 transition-all duration-300 relative'>
 
-            <div className='flex justify-between '>
-                <div className=''>
-                    <h2 className='text-lg font-bold'>Slack</h2>
-                    <p className='text-sm text-gray-500'>Team communication and collaboration platform.Team communication and collaboration platform.</p>
+            <div className='flex justify-between flex-wrap gap-2'>
+                <div className='flex-1 min-w-0'>
+                    <h2 className='text-lg font-bold'>{truncateText(bookmark.title, 50)}</h2>
                 </div>
-                <div className=''>
-                    <img className='w-[70px]' src="/assets/icon.svg" alt="" />
+                <div className='w-[50px] flex-shrink-0'>
+                    <img className='w-[50px] object-cover' src={bookmark.favicon ? bookmark.favicon : '/assets/icon.svg'} alt="" />
                 </div>
             </div>
+
+            <p className='text-sm text-gray-500'>{truncateText(bookmark.description, 200)}</p>
             <div className='mt-3 flex justify-between items-center'>
                 <div>
                     <span className='px-2 py-1 bg-gray-800 rounded text-sm text-white'>Productivity</span>

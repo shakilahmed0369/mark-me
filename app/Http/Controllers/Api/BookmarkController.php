@@ -16,7 +16,8 @@ class BookmarkController extends Controller
      */
     public function index()
     {
-        //
+        $bookmarks = Bookmark::all();
+        return response()->json($bookmarks);
     }
 
     /**
