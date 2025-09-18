@@ -6,6 +6,11 @@ import { handleAxiosError } from "../utils/errorHandler";
 
 export default function CategoryProvider({ children }: { children: React.ReactNode }) {
     const [categories, setCategories] = useState<Category[]>([]);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogMode, setDialogMode] = useState<"create" | "edit">("create");
+    const [editData, setEditData] = useState<Category | null>(null);
+    const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+    const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
 
     useEffect(() => {
         getCategories();
@@ -59,7 +64,17 @@ export default function CategoryProvider({ children }: { children: React.ReactNo
             setCategories,
             createCategory,
             updateCategory,
-            deleteCategory
+            deleteCategory,
+            dialogOpen,
+            setDialogOpen,
+            dialogMode,
+            setDialogMode,
+            editData,
+            setEditData,
+            confirmationDialogOpen,
+            setConfirmationDialogOpen,
+            categoryToDelete,
+            setCategoryToDelete,
         }}>
             {children}
         </CategoryContext.Provider>

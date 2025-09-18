@@ -3,16 +3,21 @@ import CategoryDialog from '@/components/category-dialog'
 import ConfirmationDialog from '@/components/confirmation-dialog';
 import { Button } from '@/components/ui/button';
 import { useCategory } from '@/hooks/useCategory';
-import { Category } from '@/types';
-import React, { useState } from 'react'
+import React from 'react'
 
 export default function Category() {
-    const { categories, deleteCategory } = useCategory();
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const [dialogMode, setDialogMode] = useState<"edit" | "create">("create");
-    const [editData, setEditData] = useState<Category | null>(null);
-    const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
-    const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
+    const { 
+        categories, 
+        deleteCategory, 
+        dialogOpen, 
+        setDialogOpen, 
+        setDialogMode, 
+        setEditData, 
+        confirmationDialogOpen, 
+        setConfirmationDialogOpen, 
+        categoryToDelete, 
+        setCategoryToDelete 
+    } = useCategory();
 
     return (
         <>
@@ -35,23 +40,13 @@ export default function Category() {
                     categories.map((category) => (
                         <CategoryCard key={category.id}
                             category={category}
-                            setDialogOpen={setDialogOpen}
-                            setEditData={setEditData}
-                            setDialogMode={setDialogMode}
-                            setConfirmationDialogOpen={setConfirmationDialogOpen}
-                            setCategoryToDelete={setCategoryToDelete}
                         />
                     ))
                 }
 
             </div>
 
-            <CategoryDialog
-                dialogOpen={dialogOpen}
-                setDialogOpen={setDialogOpen}
-                dialogMode={dialogMode}
-                editData={editData}
-            />
+            <CategoryDialog />
             <ConfirmationDialog
                 dialogOpen={confirmationDialogOpen}
                 setDialogOpen={setConfirmationDialogOpen}

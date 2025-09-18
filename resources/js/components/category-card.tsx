@@ -7,19 +7,16 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Category } from '@/context/CategoryContext'
-import ConfirmationDialog from './confirmation-dialog'
+import { useCategory } from '@/hooks/useCategory'
+import { Category } from '@/types'
 
 interface CategoryCardProps {
     category: Category
-    setDialogOpen: (dialogOpen: boolean) => void
-    setEditData: (category: Category) => void
-    setDialogMode: (dialogMode: "create" | "edit") => void
-    setConfirmationDialogOpen: (dialogOpen: boolean) => void
-    setCategoryToDelete: (category: Category | null) => void
 }
 
-export default function CategoryCard({ category, setDialogOpen, setEditData, setDialogMode, setConfirmationDialogOpen, setCategoryToDelete }: CategoryCardProps) {
+export default function CategoryCard({ category }: CategoryCardProps) {
+    const { setDialogOpen, setEditData, setDialogMode, setConfirmationDialogOpen, setCategoryToDelete } = useCategory();
+
     return (
         <div className='relative bg-neutral-50 h-[136px] w-full border border-gray aspect-video rounded-xl p-4 hover:rounded-none hover:-translate-y-1 transition-all duration-300'>
             <div className='flex justify-between items-center'>

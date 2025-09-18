@@ -11,6 +11,8 @@ This document details the refactoring process of the React frontend in the `reso
 - **Custom Hooks:** Introduced custom hooks for accessing context, promoting code reuse and readability.
 - **Component Refactoring:** Updated components to use the new hooks and services.
 - **Error Handling:** Implemented a centralized error handling mechanism.
+- **Reduced Prop Drilling:** Refactored the `Category` page and its child components to eliminate prop drilling.
+- **Simplified Form State:** Refactored the `CreateBookmark` page to use `useReducer` for more robust form state management.
 
 ## Detailed Changes
 
@@ -64,6 +66,24 @@ This document details the refactoring process of the React frontend in the `reso
 - **Why it's better:**
     - **Consistency:** All components now follow the same pattern for accessing data and state.
     - **Decoupling:** The components are decoupled from the data fetching logic, making them more reusable and easier to test.
+
+### 7. Eliminating Prop Drilling
+
+- **What was wrong:** In the `Category` page, state and functions were passed down through multiple layers of components (`Category` -> `CategoryCard`). This is called "prop drilling" and can make components less reusable and harder to maintain.
+- **What I did:** I moved the state related to the category dialogs (like `dialogOpen`, `editData`, etc.) into the `CategoryContext`. Now, components like `CategoryCard` and `CategoryDialog` can access this state and the functions that modify it directly from the context using the `useCategory` hook.
+- **Why it's better:**
+    - **Cleaner Components:** Child components are no longer cluttered with props that they don't use directly.
+    - **Improved Reusability:** Components are more self-contained and can be used in different contexts without needing to have specific props passed to them.
+    - **Easier Refactoring:** If you need to change the state, you only need to update the context, not all the components in between.
+
+### 8. Simplified Form State with `useReducer`
+
+- **What was wrong:** The `CreateBookmark` component used multiple `useState` hooks to manage the form state. While this works, it can become unwieldy as the form grows more complex.
+- **What I did:** I refactored the `CreateBookmark` component to use a `useReducer` hook to manage the form state. The reducer function now contains all the logic for updating the form state in a centralized location.
+- **Why it's better:**
+    - **Centralized State Logic:** All the state update logic is in one place, making it easier to understand and debug.
+    - **Predictable State Transitions:** The state can only be updated in the ways defined by the reducer's `action` types, which makes the state changes more predictable.
+    - **Scalability:** For more complex forms, `useReducer` is a much more scalable solution than multiple `useState` hooks.
 
 ## How to Maintain the New Structure
 

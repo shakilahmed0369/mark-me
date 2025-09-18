@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -9,22 +9,14 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Category, CategoryContext } from '@/context/CategoryContext'
+import { useCategory } from '@/hooks/useCategory'
 
-interface CategoryDialogProps {
-    dialogOpen: boolean
-    setDialogOpen: (dialogOpen: boolean) => void
-    dialogMode: "edit" | "create"
-    editData: Category | null
-}
+export default function CategoryDialog() {
 
-export default function CategoryDialog({ dialogOpen, setDialogOpen, dialogMode, editData }: CategoryDialogProps) {
-
-    const { createCategory, updateCategory } = useContext(CategoryContext);
+    const { createCategory, updateCategory, dialogOpen, setDialogOpen, dialogMode, editData } = useCategory();
     const [categoryName, setCategoryName] = useState('');
     const [categoryIcon, setCategoryIcon] = useState('');
 

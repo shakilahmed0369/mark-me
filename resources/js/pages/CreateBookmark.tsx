@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from "@/components/ui/label"
 import { Button } from '@/components/ui/button'
@@ -15,18 +15,32 @@ import { Loader2Icon } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { BookmarkTypes } from '@/types'
 
+const initialState: BookmarkTypes & { faviconPreview: string | null } = {
+    url: '',
+    title: '',
+    description: '',
+    favicon: null,
+    category: null,
+    faviconPreview: null,
+};
+
+function reducer(state: typeof initialState, action: { type: string; payload?: any }) {
+    switch (action.type) {
+        case 'SET_FIELD':
+            return { ...state, [action.payload.field]: action.payload.value };
+        case 'SET_SITE_INFO':
+            return { ...state, ...action.payload };
+        case 'RESET':
+            return initialState;
+        default:
+            return state;
+    }
+}
+
 export default function CreateBookmark() {
     const { getUrlInfo, urlInfoLoading, createBookmark } = useBookmark();
     const { categories, getCategories } = useCategory();
-    const [siteInfo, setSiteInfo] = useState<BookmarkTypes>({
-        url: '',
-        title: '',
-        description: '',
-        favicon: null,
-        category: null,
-    });
-    const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
-    const [url, setUrl] = useState("");
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
         getCategories();
@@ -35,28 +49,28 @@ export default function CreateBookmark() {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
-            setSiteInfo({
-                ...siteInfo,
-                favicon: file,
-            });
-            setFaviconPreview(URL.createObjectURL(file));
+            dispatch({ type: 'SET_FIELD', payload: { field: 'favicon', value: file } });
+            dispatch({ type: 'SET_FIELD', payload: { field: 'faviconPreview', value: URL.createObjectURL(file) } });
         }
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const response = await createBookmark(siteInfo);
+        const response = await createBookmark(state);
         if (response) {
             toast.success('Bookmark created successfully', { position: 'bottom-right' });
-            setSiteInfo({
-                url: '',
-                title: '',
-                description: '',
-                favicon: null,
-                category: null,
-            });
-            setFaviconPreview(null);
-            setUrl('');
+            dispatch({ type: 'RESET' });
+        }
+    }
+
+    const handleFetchWebsiteData = async () => {
+        dispatch({ type: 'RESET' });
+        const info = await getUrlInfo(state.url);
+        if (info) {
+            dispatch({ type: 'SET_SITE_INFO', payload: { ...info, url: state.url } });
+            if (info.favicon) {
+                dispatch({ type: 'SET_FIELD', payload: { field: 'faviconPreview', value: info.favicon } });
+            }
         }
     }
 
@@ -71,30 +85,13 @@ export default function CreateBookmark() {
                     <div className="grid gap-3">
                         <Label htmlFor="url">Url</Label>
                         <div className='flex gap-2'>
-                            <Input id="url" name="url" placeholder='https://example.com' value={url} onChange={(e) => setUrl(e.target.value)} />
+                            <Input id="url" name="url" placeholder='https://example.com' value={state.url} onChange={(e) => dispatch({ type: 'SET_FIELD', payload: { field: 'url', value: e.target.value } })} />
                             {urlInfoLoading ?
                                 <Button size="sm" disabled>
                                     <Loader2Icon className="animate-spin" />
                                     Please wait
                                 </Button> :
-                                <Button onClick={async () => {
-                                    setSiteInfo({
-                                        url: '',
-                                        title: '',
-                                        description: '',
-                                        favicon: null,
-                                        category: null,
-                                    });
-                                    setFaviconPreview(null);
-                                    const info = await getUrlInfo(url);
-                                    if (info) {
-                                        info.url = url;
-                                        setSiteInfo(info);
-                                        if (info.favicon) {
-                                            setFaviconPreview(info.favicon);
-                                        }
-                                    }
-                                }}>Fetch Website Data</Button>
+                                <Button onClick={handleFetchWebsiteData}>Fetch Website Data</Button>
                             }
                         </div>
                     </div>
@@ -102,19 +99,19 @@ export default function CreateBookmark() {
                     <form onSubmit={handleSubmit}>
                         <div className="grid gap-3 mt-3">
                             <Label htmlFor="title">Title</Label>
-                            <Input id="title" name="title" placeholder='Figma' value={siteInfo.title} onChange={(e) => setSiteInfo({ ...siteInfo, title: e.target.value })} />
+                            <Input id="title" name="title" placeholder='Figma' value={state.title} onChange={(e) => dispatch({ type: 'SET_FIELD', payload: { field: 'title', value: e.target.value } })} />
                         </div>
 
                         <div className="grid gap-3 mt-3">
                             <Label htmlFor="url">Description</Label>
-                            <Input id="description" name="description" placeholder='UX Design' value={siteInfo.description} onChange={(e) => setSiteInfo({ ...siteInfo, description: e.target.value })} />
+                            <Input id="description" name="description" placeholder='UX Design' value={state.description} onChange={(e) => dispatch({ type: 'SET_FIELD', payload: { field: 'description', value: e.target.value } })} />
                         </div>
 
                         <div className="grid gap-3 mt-3">
                             <Label htmlFor="url">Category</Label>
                             <Select
-                                onValueChange={(value) => setSiteInfo({ ...siteInfo, category: value })}
-                                value={siteInfo.category || ""}
+                                onValueChange={(value) => dispatch({ type: 'SET_FIELD', payload: { field: 'category', value: value } })}
+                                value={state.category || ""}
                             >
                                 <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Select a category" />
@@ -130,10 +127,10 @@ export default function CreateBookmark() {
 
                         </div>
                         {
-                            faviconPreview && (
+                            state.faviconPreview && (
                                 <div className="grid gap-3 mt-3 ">
                                     <Label htmlFor="url">Preview</Label>
-                                    <img src={faviconPreview} className='w-[70px] bg-gray-50 border border-1 p-2 rounded-2xl' alt={siteInfo.title} />
+                                    <img src={state.faviconPreview} className='w-[70px] bg-gray-50 border border-1 p-2 rounded-2xl' alt={state.title} />
                                 </div>
                             )
                         }
