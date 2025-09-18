@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\FileUploadTrait;
 use App\Http\Controllers\Controller;
+use App\Models\Bookmark;
 use Illuminate\Http\Request;
 
 class BookmarkController extends Controller
 {
+    use FileUploadTrait;
+
     /**
      * Display a listing of the resource.
      */
@@ -20,7 +24,27 @@ class BookmarkController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        $validatedData = $request->validate([
+            'url' => 'required|url',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
+            'category' => 'required|integer',
+            'favicon' => 'nullable',
+        ]);
+
+        if ($request->favicon) {
+            if (str_starts_with($request->favicon, 'http') || str_starts_with($request->favicon, 'https')) {
+                $validatedData['favicon'] = $request->favicon;
+                $validatedData['favicon_type'] = 'url';
+            } else {
+                $validatedData['favicon'] = $this->uploadFile($request->favicon);
+                $validatedData['favicon_type'] = 'file';
+            }
+        }
+
+        $bookmark = Bookmark::create($validatedData);
+
+        return response()->json($bookmark, 201);
     }
 
     /**

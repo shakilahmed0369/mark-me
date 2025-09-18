@@ -17,17 +17,20 @@ import { toast } from 'react-toastify'
 export default function CreateBookmark() {
     const { getUrlInfo, urlInfoLoading, createBookmark } = useContext(BookmarkContext);
     const [siteInfo, setSiteInfo] = useState<{
+        url: string;
         title: string;
         description: string;
         favicon: File | string | null;
         category: string | null;
     }>({
+        url: '',
         title: '',
         description: '',
         favicon: null,
         category: null,
     });
     const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+    const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
     const [url, setUrl] = useState("");
 
     useEffect(() => {
@@ -47,10 +50,12 @@ export default function CreateBookmark() {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
             setSiteInfo({
                 ...siteInfo,
-                favicon: URL.createObjectURL(e.target.files[0]),
+                favicon: file,
             });
+            setFaviconPreview(URL.createObjectURL(file));
         }
     };
 
@@ -60,17 +65,16 @@ export default function CreateBookmark() {
         if (response) {
             toast.success('Bookmark created successfully', { position: 'bottom-right' });
             setSiteInfo({
+                url: '',
                 title: '',
                 description: '',
                 favicon: null,
-                category: null,
+                category: '',
             });
+            setFaviconPreview(null);
             setUrl('');
         }
     }
-
-
-
 
     return (
         <>
@@ -91,15 +95,20 @@ export default function CreateBookmark() {
                                 </Button> :
                                 <Button onClick={async () => {
                                     setSiteInfo({
+                                        url: '',
                                         title: '',
                                         description: '',
                                         favicon: null,
                                         category: null,
                                     });
-
+                                    setFaviconPreview(null);
                                     const info = await getUrlInfo(url);
                                     if (info) {
+                                        info.url = url;
                                         setSiteInfo(info);
+                                        if (info.favicon) {
+                                            setFaviconPreview(info.favicon);
+                                        }
                                     }
                                 }}>Fetch Website Data</Button>
                             }
@@ -121,23 +130,26 @@ export default function CreateBookmark() {
                             <Label htmlFor="url">Category</Label>
                             <Select
                                 onValueChange={(value) => setSiteInfo({ ...siteInfo, category: value })}
-                                value={siteInfo.category ?? undefined}
+                                value={siteInfo.category || ""}
                             >
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select" />
+                                    <SelectValue placeholder="Select a category" />
                                 </SelectTrigger>
-                                <SelectContent >
+                                <SelectContent>
                                     {categories.map((category) => (
-                                        <SelectItem key={category.id} value={category.id}>{category.name}</SelectItem>
+                                        <SelectItem key={category.id} value={String(category.id)}>
+                                            {category.name}
+                                        </SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
+
                         </div>
                         {
-                            siteInfo.favicon && (
+                            faviconPreview && (
                                 <div className="grid gap-3 mt-3 ">
                                     <Label htmlFor="url">Preview</Label>
-                                    <img src={typeof siteInfo.favicon === 'string' ? siteInfo.favicon : URL.createObjectURL(siteInfo.favicon)} className='w-[70px] bg-gray-50 border border-1 p-2 rounded-2xl' alt={siteInfo.title} />
+                                    <img src={faviconPreview} className='w-[70px] bg-gray-50 border border-1 p-2 rounded-2xl' alt={siteInfo.title} />
                                 </div>
                             )
                         }

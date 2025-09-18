@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export interface BookmarkTypes {
+    url: string;
     title: string;
     description: string;
     favicon: File | null;
@@ -18,10 +19,15 @@ export default function BookmarkProvider({ children }: { children: React.ReactNo
             const response = await axios.post('/api/get-url-info', { url });
             return response.data;
         } catch (error) {
-            const errors = error.response.data.errors;
-            Object.entries(errors).forEach(([key, value]) => {
-                toast.error(errors[key][0], { position: 'bottom-right' });
-            });
+            if (axios.isAxiosError(error)) {
+                const errors = error.response?.data?.errors;
+                Object.entries(errors).forEach(([key, value]) => {
+                    toast.error(errors[key][0], { position: 'bottom-right' });
+                });
+            } else {
+                console.log(error);
+                toast.error('Failed to fetch url info', { position: 'bottom-right' });
+            }
         } finally {
             setUrlInfoLoading(false);
         }
@@ -30,8 +36,8 @@ export default function BookmarkProvider({ children }: { children: React.ReactNo
         console.log('createBookmark', bookmark);
         try {
             const formData = new FormData();
+            formData.append('url', bookmark.url);
             formData.append('title', bookmark.title);
-
             formData.append('description', bookmark.description);
             formData.append('category', bookmark.category ?? '');
             if (bookmark.favicon) {
@@ -44,7 +50,10 @@ export default function BookmarkProvider({ children }: { children: React.ReactNo
             });
             return response.data;
         } catch (error) {
-            console.log(error);
+            const errors = error.response.data.errors;
+            Object.entries(errors).forEach(([key, value]) => {
+                toast.error(errors[key][0], { position: 'bottom-right' });
+            });
         }
     }
     return (
