@@ -14,7 +14,7 @@ interface BookmarkTypes {
 
 export default function BookmarkCard({ bookmark }: { bookmark: BookmarkTypes }) {
     return (
-        <div className='bg-neutral-50 border border-gray aspect-video rounded-xl p-4 hover:rounded-none hover:-translate-y-1 transition-all duration-300 relative'>
+        <div className='bg-neutral-50 border border-gray rounded-xl p-4 hover:rounded-none hover:-translate-y-1 transition-all duration-300 relative mb-4'>
 
             <div className='flex justify-between flex-wrap gap-2'>
                 <div className='flex-1 min-w-0'>

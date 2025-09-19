@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react'
-import { Button } from "@/components/ui/button"
-import BookmarkCard from "@/components/bookmark-card"
+import React, { useEffect } from 'react';
+import { Button } from "@/components/ui/button";
+import BookmarkCard from "@/components/bookmark-card";
 import { useBookmark } from '@/hooks/useBookmark';
+import Masonry from 'react-masonry-css';
 
 export default function Home() {
     const { bookmarks, getBookmarks } = useBookmark();
@@ -9,6 +10,14 @@ export default function Home() {
     useEffect(() => {
         getBookmarks();
     }, []);
+
+    const breakpointColumnsObj = {
+      default: 5,
+      1280: 4,
+      1024: 3,
+      768: 2,
+      640: 1
+    };
 
     return (
         <>
@@ -21,11 +30,15 @@ export default function Home() {
                     <Button className='h-[50px] bg-neutral-50 text-black border  border-gray-500 shadow-none'>Sort</Button>
                 </div>
             </div>
-            <div className='grid auto-rows-min gap-4 grip-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5'>
+            <Masonry
+                breakpointCols={breakpointColumnsObj}
+                className="flex w-auto -ml-4"
+                columnClassName="pl-4 bg-clip-padding"
+            >
                 {bookmarks.map((bookmark) => (
                     <BookmarkCard key={bookmark.id} bookmark={bookmark} />
                 ))}
-            </div>
+            </Masonry>
         </>
     )
 }
