@@ -23,6 +23,7 @@ const initialState: BookmarkTypes & { faviconPreview: string | null } = {
     favicon: null,
     category: null,
     faviconPreview: null,
+
 };
 
 function reducer(state: typeof initialState, action: { type: string; payload?: any }) {
@@ -55,7 +56,9 @@ export default function CreateBookmark() {
         if (isEditMode && id && categories.length > 0) {
             getBookmark(Number(id)).then((bookmark) => {
                 if (bookmark) {
-                    dispatch({ type: 'SET_SITE_INFO', payload: { ...bookmark } });
+                    dispatch({ type: 'SET_FIELD', payload: { field: 'url', value: bookmark.url } });
+                    dispatch({ type: 'SET_FIELD', payload: { field: 'title', value: bookmark.title } });
+                    dispatch({ type: 'SET_FIELD', payload: { field: 'description', value: bookmark.description } });
                     dispatch({ type: 'SET_FIELD', payload: { field: 'faviconPreview', value: bookmark.favicon } });
                     if (bookmark.category) {
                         dispatch({ type: 'SET_FIELD', payload: { field: 'category', value: String(bookmark.category) } });
@@ -88,7 +91,7 @@ export default function CreateBookmark() {
             const response = await updateBookmark(Number(id), state);
             if (response) {
                 toast.success('Bookmark updated successfully', { position: 'bottom-right' });
-                navigate(`/bookmarks/${id}/edit`);
+                navigate(`/`);
             }
         }
     }
