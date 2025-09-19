@@ -48,19 +48,24 @@ export default function CreateBookmark() {
     const isEditMode = Boolean(id);
 
     useEffect(() => {
-        dispatch({ type: 'RESET' });
         getCategories();
-        if (isEditMode) {
+    }, []);
+
+    useEffect(() => {
+        if (isEditMode && id && categories.length > 0) {
             getBookmark(Number(id)).then((bookmark) => {
                 if (bookmark) {
                     dispatch({ type: 'SET_SITE_INFO', payload: { ...bookmark } });
                     dispatch({ type: 'SET_FIELD', payload: { field: 'faviconPreview', value: bookmark.favicon } });
-                    dispatch({ type: 'SET_FIELD', payload: { field: 'category', value: bookmark.category } });
-                    console.log(bookmark);
+                    if (bookmark.category) {
+                        dispatch({ type: 'SET_FIELD', payload: { field: 'category', value: String(bookmark.category) } });
+                    }
                 }
             });
+        } else {
+            dispatch({ type: 'RESET' });
         }
-    }, []);
+    }, [id, isEditMode, categories]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
