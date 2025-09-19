@@ -93,6 +93,11 @@ class BookmarkController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $bookmark = Bookmark::find($id);
+        if (!$bookmark) {
+            return response()->json(['message' => 'Bookmark not found'], 404);
+        }
+        $bookmark->delete();
+        return response()->json(['message' => 'Bookmark deleted'], 200);
     }
 }

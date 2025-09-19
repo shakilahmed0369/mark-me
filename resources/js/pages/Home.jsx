@@ -6,7 +6,7 @@ import Masonry from 'react-masonry-css';
 import ConfirmationDialog from '@/components/confirmation-dialog';
 
 export default function Home() {
-    const { bookmarks, getBookmarks, confirmationDialog, setConfirmationDialog } = useBookmark();
+    const { bookmarks, getBookmarks, confirmationDialog, setConfirmationDialog, deleteBookmark, deleteId, setDeleteId } = useBookmark();
 
 
     useEffect(() => {
@@ -43,6 +43,10 @@ export default function Home() {
             </Masonry>
 
             <ConfirmationDialog dialogOpen={confirmationDialog} setDialogOpen={setConfirmationDialog} callback={() => {
+                if (deleteId) {
+                    deleteBookmark(deleteId);
+                    setDeleteId(null);
+                }
                 setConfirmationDialog(false);
                 
             }} />

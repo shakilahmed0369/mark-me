@@ -80,3 +80,8 @@ export const updateBookmark = async (id: number, bookmark: BookmarkTypes) => {
 
     return response.data;
 }
+
+export const deleteBookmark = async (id: number) => {
+    const response = await api.delete(`/bookmarks/${id}`);
+    return response.data;
+}

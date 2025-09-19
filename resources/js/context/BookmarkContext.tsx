@@ -10,7 +10,10 @@ interface BookmarkContextType {
     getBookmarks: () => Promise<void>;
     getBookmark: (id: number) => Promise<Bookmark | undefined>;
     updateBookmark: (id: number, bookmark: BookmarkTypes) => Promise<Bookmark | undefined>;
+    deleteBookmark: (id: number) => Promise<void>;
     confirmationDialog: boolean;
     setConfirmationDialog: Dispatch<SetStateAction<boolean>>;
+    deleteId: number | null;
+    setDeleteId: Dispatch<SetStateAction<number | null>>;
 }
 export const BookmarkContext = createContext<BookmarkContextType | undefined>(undefined);

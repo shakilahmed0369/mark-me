@@ -14,7 +14,7 @@ interface BookmarkTypes {
 }
 
 export default function BookmarkCard({ bookmark }: { bookmark: BookmarkTypes }) {
-    const { setConfirmationDialog } = useBookmark();
+    const { setConfirmationDialog, setDeleteId } = useBookmark();
     return (
         <div className='bg-neutral-50 border border-gray rounded-xl p-4 hover:rounded-none hover:-translate-y-1 transition-all duration-300 relative mb-4'>
 
@@ -38,7 +38,7 @@ export default function BookmarkCard({ bookmark }: { bookmark: BookmarkTypes }) 
                     </Link>
                     <Button className=" h-[27px] cursor-pointer px-2 py-0 rounded text-sm text-white" tooltip='Share bookmark'><img src="/assets/icons/share.svg" alt="" /></Button>
                     <Button onClick={() => {
-                        console.log('Delete bookmark', bookmark.id)
+                        setDeleteId(bookmark.id)
                         setConfirmationDialog(true)
                     }} className=" h-[27px] cursor-pointer px-2 py-0 rounded text-sm text-white" tooltip='Delete bookmark'><img src="/assets/icons/trash.svg" alt="" /></Button>
                 </div>
