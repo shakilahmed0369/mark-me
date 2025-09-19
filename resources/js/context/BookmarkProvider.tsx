@@ -7,6 +7,7 @@ import { Bookmark, BookmarkTypes } from "../types";
 export default function BookmarkProvider({ children }: { children: React.ReactNode }) {
     const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
     const [urlInfoLoading, setUrlInfoLoading] = useState(false);
+    const [confirmationDialog, setConfirmationDialog] = useState(false);
 
     const getUrlInfo = async (url: string) => {
         try {
@@ -64,6 +65,8 @@ export default function BookmarkProvider({ children }: { children: React.ReactNo
             getBookmarks,
             getBookmark,
             updateBookmark,
+            confirmationDialog,
+            setConfirmationDialog,
         }}>
             {children}
         </BookmarkContext.Provider>

@@ -10,5 +10,7 @@ interface BookmarkContextType {
     getBookmarks: () => Promise<void>;
     getBookmark: (id: number) => Promise<Bookmark | undefined>;
     updateBookmark: (id: number, bookmark: BookmarkTypes) => Promise<Bookmark | undefined>;
+    confirmationDialog: boolean;
+    setConfirmationDialog: Dispatch<SetStateAction<boolean>>;
 }
 export const BookmarkContext = createContext<BookmarkContextType | undefined>(undefined);

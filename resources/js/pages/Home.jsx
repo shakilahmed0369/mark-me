@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import BookmarkCard from "@/components/bookmark-card";
 import { useBookmark } from '@/hooks/useBookmark';
 import Masonry from 'react-masonry-css';
+import ConfirmationDialog from '@/components/confirmation-dialog';
 
 export default function Home() {
-    const { bookmarks, getBookmarks } = useBookmark();
+    const { bookmarks, getBookmarks, confirmationDialog, setConfirmationDialog } = useBookmark();
+
 
     useEffect(() => {
         getBookmarks();
@@ -39,6 +41,11 @@ export default function Home() {
                     <BookmarkCard key={bookmark.id} bookmark={bookmark} />
                 ))}
             </Masonry>
+
+            <ConfirmationDialog dialogOpen={confirmationDialog} setDialogOpen={setConfirmationDialog} callback={() => {
+                setConfirmationDialog(false);
+                
+            }} />
         </>
     )
 }
