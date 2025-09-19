@@ -53,15 +53,39 @@ class BookmarkController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $bookmark = Bookmark::find($id);
+        if (!$bookmark) {
+            return response()->json(['message' => 'Bookmark not found'], 404);
+        }
+        return response()->json($bookmark);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Bookmark $bookmark)
     {
-        //
+        $validatedData = $request->validate([
+            'url' => 'required|url',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
+            'category' => 'required|integer',
+            'favicon' => 'nullable',
+        ]);
+
+        if ($request->favicon) {
+            if (str_starts_with($request->favicon, 'http') || str_starts_with($request->favicon, 'https')) {
+                $validatedData['favicon'] = $request->favicon;
+                $validatedData['favicon_type'] = 'url';
+            } else {
+                $validatedData['favicon'] = $this->uploadFile($request->favicon);
+                $validatedData['favicon_type'] = 'file';
+            }
+        }
+
+        $bookmark->update($validatedData);
+
+        return response()->json($bookmark, 200);
     }
 
     /**

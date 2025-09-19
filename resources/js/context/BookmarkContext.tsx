@@ -8,5 +8,7 @@ interface BookmarkContextType {
     urlInfoLoading: boolean;
     createBookmark: (bookmark: BookmarkTypes) => Promise<any>;
     getBookmarks: () => Promise<void>;
+    getBookmark: (id: number) => Promise<Bookmark | undefined>;
+    updateBookmark: (id: number, bookmark: BookmarkTypes) => Promise<Bookmark | undefined>;
 }
 export const BookmarkContext = createContext<BookmarkContextType | undefined>(undefined);

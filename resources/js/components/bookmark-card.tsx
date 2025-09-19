@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button } from './ui/button'
 import { truncateText } from '@/utils/helper';
+import { Link } from 'react-router-dom';
 interface BookmarkTypes {
     id: number;
     title: string;
@@ -30,7 +31,9 @@ export default function BookmarkCard({ bookmark }: { bookmark: BookmarkTypes }) 
                     <span className='px-2 py-1 bg-gray-800 rounded text-sm text-white'>Productivity</span>
                 </div>
                 <div className='flex gap-2'>
-                    <Button className=" h-[27px] cursor-pointer px-2 py-0 rounded text-sm text-white" tooltip='Edit bookmark'><img src="/assets/icons/edit.svg" alt="" /></Button>
+                    <Link to={`/bookmarks/${bookmark.id}/edit`}>
+                        <Button className=" h-[27px] cursor-pointer px-2 py-0 rounded text-sm text-white" tooltip='Edit bookmark'><img src="/assets/icons/edit.svg" alt="" /></Button>
+                    </Link>
                     <Button className=" h-[27px] cursor-pointer px-2 py-0 rounded text-sm text-white" tooltip='Share bookmark'><img src="/assets/icons/share.svg" alt="" /></Button>
                     <Button className=" h-[27px] cursor-pointer px-2 py-0 rounded text-sm text-white" tooltip='Delete bookmark'><img src="/assets/icons/trash.svg" alt="" /></Button>
                 </div>

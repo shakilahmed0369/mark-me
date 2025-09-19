@@ -17,6 +17,8 @@ function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/categories" element={<Category />} />
                         <Route path="/create-bookmark" element={<CreateBookmark />} />
+                        <Route path="/bookmarks/:id/edit" element={<CreateBookmark />} />
+
                     </Route>
                 </Routes>
             </BookmarkProvider>

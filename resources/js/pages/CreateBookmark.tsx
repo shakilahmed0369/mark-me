@@ -14,6 +14,7 @@ import { useCategory } from '@/hooks/useCategory'
 import { Loader2Icon } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { BookmarkTypes } from '@/types'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const initialState: BookmarkTypes & { faviconPreview: string | null } = {
     url: '',
@@ -38,12 +39,27 @@ function reducer(state: typeof initialState, action: { type: string; payload?: a
 }
 
 export default function CreateBookmark() {
-    const { getUrlInfo, urlInfoLoading, createBookmark } = useBookmark();
+    const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
+    const { getUrlInfo, urlInfoLoading, createBookmark, getBookmark, updateBookmark } = useBookmark();
     const { categories, getCategories } = useCategory();
     const [state, dispatch] = useReducer(reducer, initialState);
 
+    const isEditMode = Boolean(id);
+
     useEffect(() => {
+        dispatch({ type: 'RESET' });
         getCategories();
+        if (isEditMode) {
+            getBookmark(Number(id)).then((bookmark) => {
+                if (bookmark) {
+                    dispatch({ type: 'SET_SITE_INFO', payload: { ...bookmark } });
+                    dispatch({ type: 'SET_FIELD', payload: { field: 'faviconPreview', value: bookmark.favicon } });
+                    dispatch({ type: 'SET_FIELD', payload: { field: 'category', value: bookmark.category } });
+                    console.log(bookmark);
+                }
+            });
+        }
     }, []);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,10 +72,19 @@ export default function CreateBookmark() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const response = await createBookmark(state);
-        if (response) {
-            toast.success('Bookmark created successfully', { position: 'bottom-right' });
-            dispatch({ type: 'RESET' });
+        if (!isEditMode) {
+            const response = await createBookmark(state);
+            if (response) {
+                toast.success('Bookmark created successfully', { position: 'bottom-right' });
+                dispatch({ type: 'RESET' });
+            }
+        }else {
+
+            const response = await updateBookmark(Number(id), state);
+            if (response) {
+                toast.success('Bookmark updated successfully', { position: 'bottom-right' });
+                navigate(`/bookmarks/${id}/edit`);
+            }
         }
     }
 
@@ -112,6 +137,7 @@ export default function CreateBookmark() {
                             <Select
                                 onValueChange={(value) => dispatch({ type: 'SET_FIELD', payload: { field: 'category', value: value } })}
                                 value={state.category || ""}
+                                defaultValue={state.category || ""}
                             >
                                 <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Select a category" />

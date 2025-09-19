@@ -54,3 +54,29 @@ export const getBookmarks = async () => {
     const response = await api.get("/bookmarks");
     return response.data;
 };
+
+export const getBookmark = async (id: number) => {
+    const response = await api.get(`/bookmarks/${id}`);
+    return response.data;
+}
+
+export const updateBookmark = async (id: number, bookmark: BookmarkTypes) => {
+    console.log('working', bookmark);
+    const formData = new FormData();
+    formData.append("_method", "PUT");
+    formData.append("url", bookmark.url);
+    formData.append("title", bookmark.title);
+    formData.append("description", bookmark.description);
+    formData.append("category", bookmark.category ?? "");
+    if (bookmark.favicon) {
+        formData.append("favicon", bookmark.favicon);
+    }
+
+    const response = await api.post(`/bookmarks/${id}`, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+
+    return response.data;
+}
