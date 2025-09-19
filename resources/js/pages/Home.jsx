@@ -21,7 +21,7 @@ export default function Home() {
                     <Button className='h-[50px] bg-neutral-50 text-black border  border-gray-500 shadow-none'>Sort</Button>
                 </div>
             </div>
-            <div className='grid auto-rows-min gap-4 grip-cols-1 md:grid-cols-3 lg:grid-cols-5'>
+            <div className='grid auto-rows-min gap-4 grip-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5'>
                 {bookmarks.map((bookmark) => (
                     <BookmarkCard key={bookmark.id} bookmark={bookmark} />
                 ))}
