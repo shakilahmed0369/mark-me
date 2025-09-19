@@ -49,26 +49,25 @@ export default function CreateBookmark() {
     const isEditMode = Boolean(id);
 
     useEffect(() => {
-        getCategories();
+        getCategories().then(() => {
+            if (isEditMode && id && categories.length > 0) {
+                getBookmark(Number(id)).then((bookmark) => {
+                    if (bookmark) {
+                        dispatch({ type: 'SET_FIELD', payload: { field: 'url', value: bookmark.url } });
+                        dispatch({ type: 'SET_FIELD', payload: { field: 'title', value: bookmark.title } });
+                        dispatch({ type: 'SET_FIELD', payload: { field: 'description', value: bookmark.description } });
+                        dispatch({ type: 'SET_FIELD', payload: { field: 'faviconPreview', value: bookmark.favicon } });
+                        if (bookmark.category) {
+                            dispatch({ type: 'SET_FIELD', payload: { field: 'category', value: String(bookmark.category) } });
+                        }
+                    }
+                });
+            } else {
+                dispatch({ type: 'RESET' });
+            }
+        })
     }, []);
 
-    useEffect(() => {
-        if (isEditMode && id && categories.length > 0) {
-            getBookmark(Number(id)).then((bookmark) => {
-                if (bookmark) {
-                    dispatch({ type: 'SET_FIELD', payload: { field: 'url', value: bookmark.url } });
-                    dispatch({ type: 'SET_FIELD', payload: { field: 'title', value: bookmark.title } });
-                    dispatch({ type: 'SET_FIELD', payload: { field: 'description', value: bookmark.description } });
-                    dispatch({ type: 'SET_FIELD', payload: { field: 'faviconPreview', value: bookmark.favicon } });
-                    if (bookmark.category) {
-                        dispatch({ type: 'SET_FIELD', payload: { field: 'category', value: String(bookmark.category) } });
-                    }
-                }
-            });
-        } else {
-            dispatch({ type: 'RESET' });
-        }
-    }, [id, isEditMode, categories]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -86,7 +85,7 @@ export default function CreateBookmark() {
                 toast.success('Bookmark created successfully', { position: 'bottom-right' });
                 dispatch({ type: 'RESET' });
             }
-        }else {
+        } else {
 
             const response = await updateBookmark(Number(id), state);
             if (response) {
