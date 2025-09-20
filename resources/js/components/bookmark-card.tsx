@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from './ui/button'
 import { truncateText } from '@/utils/helper';
 import { Link } from 'react-router-dom';
 import { useBookmark } from '@/hooks/useBookmark';
+import ShareDialog from './share-dialog';
 interface BookmarkTypes {
     id: number;
     title: string;
@@ -15,6 +16,8 @@ interface BookmarkTypes {
 
 export default function BookmarkCard({ bookmark }: { bookmark: BookmarkTypes }) {
     const { setConfirmationDialog, setDeleteId } = useBookmark();
+    const [dialogOpen, setDialogOpen] = useState(false);
+
     return (
         <div className='bg-neutral-50 border border-gray rounded-xl p-4 hover:rounded-none hover:-translate-y-1 transition-all duration-300 relative mb-4'>
 
@@ -36,14 +39,14 @@ export default function BookmarkCard({ bookmark }: { bookmark: BookmarkTypes }) 
                     <Link to={`/bookmarks/${bookmark.id}/edit`}>
                         <Button className=" h-[27px] cursor-pointer px-2 py-0 rounded text-sm text-white" tooltip='Edit bookmark'><img src="/assets/icons/edit.svg" alt="" /></Button>
                     </Link>
-                    <Button className=" h-[27px] cursor-pointer px-2 py-0 rounded text-sm text-white" tooltip='Share bookmark'><img src="/assets/icons/share.svg" alt="" /></Button>
+                    <Button onClick={() => setDialogOpen(true)} className=" h-[27px] cursor-pointer px-2 py-0 rounded text-sm text-white" tooltip='Share bookmark'><img src="/assets/icons/share.svg" alt="" /></Button>
                     <Button onClick={() => {
                         setDeleteId(bookmark.id)
                         setConfirmationDialog(true)
                     }} className=" h-[27px] cursor-pointer px-2 py-0 rounded text-sm text-white" tooltip='Delete bookmark'><img src="/assets/icons/trash.svg" alt="" /></Button>
                 </div>
             </div>
-
+            <ShareDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} url={bookmark.url} />
         </div>
     )
 }
