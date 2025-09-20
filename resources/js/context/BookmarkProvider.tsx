@@ -32,6 +32,7 @@ export default function BookmarkProvider({ children }: { children: React.ReactNo
     const getBookmarks = async () => {
         try {
             const data = await getBookmarksApi();
+            console.log(data);
             setBookmarks(data);
         } catch (error) {
             handleAxiosError(error);

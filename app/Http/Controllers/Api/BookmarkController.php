@@ -16,7 +16,7 @@ class BookmarkController extends Controller
      */
     public function index()
     {
-        $bookmarks = Bookmark::all();
+        $bookmarks = Bookmark::with('category')->orderBy('created_at', 'desc')->get();
         return response()->json($bookmarks);
     }
 

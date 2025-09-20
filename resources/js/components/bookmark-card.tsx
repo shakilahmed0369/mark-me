@@ -30,7 +30,7 @@ export default function BookmarkCard({ bookmark }: { bookmark: BookmarkTypes }) 
             <p className='text-sm text-gray-500'>{truncateText(bookmark.description, 200)}</p>
             <div className='mt-3 flex justify-between items-center'>
                 <div>
-                    <span className='px-2 py-1 bg-gray-800 rounded text-sm text-white'>Productivity</span>
+                    <span className='px-2 py-1 bg-gray-800 rounded text-sm text-white'>{bookmark.category.name}</span>
                 </div>
                 <div className='flex gap-2'>
                     <Link to={`/bookmarks/${bookmark.id}/edit`}>
