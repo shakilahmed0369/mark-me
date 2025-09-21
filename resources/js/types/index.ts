@@ -3,6 +3,7 @@ export interface Category {
     id: number;
     name: string;
     icon: string;
+    bookmarks_count: number | null;
 }
 
 export interface Bookmark {

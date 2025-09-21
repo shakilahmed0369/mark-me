@@ -24,7 +24,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
                 <img className='w-[40px]' src={`/assets/default-icons/${category.icon}.svg`} alt="" />
             </div>
             <div className='mt-5'>
-                <span className='px-3 py-1 bg-black rounded-sm text-white'>10 bookmarks</span>
+                <span className='px-3 py-1 bg-black rounded-sm text-white'>{category.bookmarks_count ?? 0} bookmarks</span>
             </div>
             <div className='absolute bottom-2 right-4'>
                 <DropdownMenu>

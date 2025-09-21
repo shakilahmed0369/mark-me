@@ -13,7 +13,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::select(['id', 'name', 'icon'])->get();
+        $categories = Category::select(['id', 'name', 'icon'])
+            ->withCount('bookmarks')
+            ->get();
 
         return response()->json(['data' => $categories], 200);
     }

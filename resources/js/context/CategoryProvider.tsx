@@ -5,6 +5,7 @@ import { getCategories as getCategoriesApi, createCategory as createCategoryApi,
 import { handleAxiosError } from "../utils/errorHandler";
 
 export default function CategoryProvider({ children }: { children: React.ReactNode }) {
+    const [isLoading, setIsLoading] = useState(false);
     const [categories, setCategories] = useState<Category[]>([]);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogMode, setDialogMode] = useState<"create" | "edit">("create");
@@ -12,16 +13,15 @@ export default function CategoryProvider({ children }: { children: React.ReactNo
     const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
     const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
 
-    useEffect(() => {
-        getCategories();
-    }, []);
-
     const getCategories = async () => {
         try {
+            setIsLoading(true);
             const data = await getCategoriesApi();
             setCategories(data);
         } catch (error) {
             handleAxiosError(error);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -60,6 +60,8 @@ export default function CategoryProvider({ children }: { children: React.ReactNo
 
     return (
         <CategoryContext.Provider value={{
+            isLoading,
+            setIsLoading,
             categories,
             setCategories,
             getCategories,

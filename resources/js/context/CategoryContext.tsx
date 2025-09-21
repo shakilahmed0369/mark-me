@@ -2,6 +2,8 @@ import { createContext, Dispatch, SetStateAction } from "react";
 import { Category } from "../types";
 
 interface CategoryContextType {
+    isLoading: boolean;
+    setIsLoading: Dispatch<SetStateAction<boolean>>;
     categories: Category[];
     setCategories: Dispatch<SetStateAction<Category[]>>;
     getCategories: () => Promise<void>;
