@@ -17,5 +17,7 @@ interface BookmarkContextType {
     setConfirmationDialog: Dispatch<SetStateAction<boolean>>;
     deleteId: number | null;
     setDeleteId: Dispatch<SetStateAction<number | null>>;
+    searchQuery: string;
+    setSearchQuery: Dispatch<SetStateAction<string>>;
 }
 export const BookmarkContext = createContext<BookmarkContextType | undefined>(undefined);

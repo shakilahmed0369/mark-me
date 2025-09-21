@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { useBookmark } from '@/hooks/useBookmark';
 import {
     SidebarInset,
     SidebarProvider,
@@ -15,6 +16,8 @@ import { Outlet, useNavigate } from "react-router-dom"
 
 export default function MainLayout() {
     const navigate = useNavigate();
+    const { searchQuery, setSearchQuery, getBookmarks } = useBookmark();
+
     return (
         <SidebarProvider>
             <AppSidebar />
@@ -28,7 +31,10 @@ export default function MainLayout() {
 
                     <div className="flex justify-between w-full">
                         <div>
-                            <Input placeholder="Search bookmarks" type="text" className="lg:w-2xl md:2 sm:w-1/3 w-full h-[50px]" />
+                            <Input placeholder="Search bookmarks" value={searchQuery} onChange={(e) => {
+                                setSearchQuery(e.target.value);
+                                getBookmarks(e.target.value);
+                            }} type="text" className="lg:w-2xl md:2 sm:w-1/3 w-full h-[50px]" />
                         </div>
                         <div>
                             <Button onClick={() => navigate('/create-bookmark')} className="h-[50px] cursor-pointer"> <img src="/assets/icons/plus.svg" alt="plus" className="w-6 h-6" /> New Bookmark</Button>

@@ -14,9 +14,14 @@ class BookmarkController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $bookmarks = Bookmark::with('category')->orderBy('created_at', 'desc')->get();
+        $bookmarks = Bookmark::with('category')->orderBy('created_at', 'desc')
+        ->when($request->filled('query'), function($query) use ($request) {
+            $query->where('title', 'like', '%' . $request->query('query') . '%')
+            ->orWhere('description', 'like', '%' . $request->query('query') . '%');
+        })
+        ->get();
         return response()->json($bookmarks);
     }
 

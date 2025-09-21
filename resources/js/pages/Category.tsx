@@ -27,7 +27,6 @@ export default function Category() {
     }, []);
 
     return (
-
         <>
             <div className='w-full flex items-center justify-between'>
                 <div>
