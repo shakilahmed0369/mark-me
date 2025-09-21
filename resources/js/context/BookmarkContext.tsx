@@ -2,6 +2,8 @@ import { createContext, Dispatch, SetStateAction } from "react";
 import { Bookmark, BookmarkTypes } from "../types";
 
 interface BookmarkContextType {
+    isLoading: boolean;
+    setIsLoading: Dispatch<SetStateAction<boolean>>;
     bookmarks: Bookmark[];
     setBookmarks: Dispatch<SetStateAction<Bookmark[]>>;
     getUrlInfo: (url: string) => Promise<any>;

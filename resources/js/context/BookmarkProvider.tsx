@@ -5,6 +5,7 @@ import { handleAxiosError } from "../utils/errorHandler";
 import { Bookmark, BookmarkTypes } from "../types";
 
 export default function BookmarkProvider({ children }: { children: React.ReactNode }) {
+    const [isLoading, setIsLoading] = useState(false);
     const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
     const [urlInfoLoading, setUrlInfoLoading] = useState(false);
     const [confirmationDialog, setConfirmationDialog] = useState(false);
@@ -31,11 +32,14 @@ export default function BookmarkProvider({ children }: { children: React.ReactNo
 
     const getBookmarks = async () => {
         try {
+            setIsLoading(true);
             const data = await getBookmarksApi();
             console.log(data);
             setBookmarks(data);
         } catch (error) {
             handleAxiosError(error);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -68,6 +72,8 @@ export default function BookmarkProvider({ children }: { children: React.ReactNo
 
     return (
         <BookmarkContext.Provider value={{
+            isLoading,
+            setIsLoading,
             bookmarks,
             setBookmarks,
             getUrlInfo,

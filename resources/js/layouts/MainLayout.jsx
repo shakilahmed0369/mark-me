@@ -11,9 +11,10 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { Outlet } from "react-router-dom"
+import { Outlet, useNavigate } from "react-router-dom"
 
 export default function MainLayout() {
+    const navigate = useNavigate();
     return (
         <SidebarProvider>
             <AppSidebar />
@@ -30,7 +31,7 @@ export default function MainLayout() {
                             <Input placeholder="Search bookmarks" type="text" className="lg:w-2xl md:2 sm:w-1/3 w-full h-[50px]" />
                         </div>
                         <div>
-                            <Button className="h-[50px]">New Bookmark</Button>
+                            <Button onClick={() => navigate('/create-bookmark')} className="h-[50px] cursor-pointer"> <img src="/assets/icons/plus.svg" alt="plus" className="w-6 h-6" /> New Bookmark</Button>
                         </div>
                     </div>
 
