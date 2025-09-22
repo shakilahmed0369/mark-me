@@ -26,7 +26,9 @@ export default function BookmarkProvider({ children }: { children: React.ReactNo
 
     const createBookmark = async (bookmark: BookmarkTypes) => {
         try {
-            return await createBookmarkApi(bookmark);
+            const created = await createBookmarkApi(bookmark);
+            await getBookmarks(searchQuery, order);
+            return created;
         } catch (error) {
             handleAxiosError(error);
         }
@@ -55,8 +57,9 @@ export default function BookmarkProvider({ children }: { children: React.ReactNo
 
     const updateBookmark = async (id: number, bookmark: BookmarkTypes) => {
         try {
-            const data = await updateBookmarkApi(id, bookmark);
-            return data;
+            const updated = await updateBookmarkApi(id, bookmark);
+            await getBookmarks(searchQuery, order);
+            return updated;
         } catch (error) {
             handleAxiosError(error);
         }
@@ -65,7 +68,7 @@ export default function BookmarkProvider({ children }: { children: React.ReactNo
     const deleteBookmark = async (id: number) => {
         try {
             await deleteBookmarkApi(id);
-            setBookmarks(bookmarks.filter(bookmark => bookmark.id !== id));
+            await getBookmarks(searchQuery, order);
         } catch (error) {
             handleAxiosError(error);
         }
