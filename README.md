@@ -9,8 +9,9 @@
 ### Features
 
 -   **Categories and bookmarks**: Create and manage bookmarks with categories
--   **File uploads**: Upload images/icons for visual bookmarks
--   **Modern stack**: Laravel API + React UI, Vite, Tailwind CSS
+-   **File uploads**: Upload custom image for bookmark
+-   **Auto Fetch**: Fetch site info dynamicly
+-   **Modern stack**: Laravel API + React, Shadcn, Vite, Tailwind CSS
 
 ## Installation
 
@@ -23,7 +24,7 @@
 ### 1) Clone and install dependencies
 
 ```bash
-git clone <your-repo-url> mark-me
+https://github.com/shakilahmed0369/mark-me
 cd mark-me
 composer install
 npm install
