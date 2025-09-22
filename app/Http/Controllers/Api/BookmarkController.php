@@ -17,14 +17,14 @@ class BookmarkController extends Controller
     public function index(Request $request)
     {
         $bookmarks = Bookmark::with('category')
-        ->when($request->filled('query'), function($query) use ($request) {
-            $query->where('title', 'like', '%' . $request->query('query') . '%')
-            ->orWhere('description', 'like', '%' . $request->query('query') . '%');
-        })
-        ->when($request->filled('order'), function($query) use ($request) {
-            $query->orderBy('created_at', $request->query('order'));
-        })
-        ->get();
+            ->when($request->filled('query'), function ($query) use ($request) {
+                $query->where('title', 'like', '%' . $request->query('query') . '%')
+                    ->orWhere('description', 'like', '%' . $request->query('query') . '%');
+            })
+            ->when($request->filled('order'), function ($query) use ($request) {
+                $query->orderBy('created_at', $request->query('order'));
+            })
+            ->get();
         return response()->json($bookmarks);
     }
 
