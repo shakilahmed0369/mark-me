@@ -11,15 +11,20 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 export default function MainLayout() {
     const navigate = useNavigate();
     const { searchQuery, setSearchQuery, getBookmarks, order } = useBookmark();
+        const route = useLocation();
 
     const debouncedQuery = useDebounce(searchQuery, 400);
 
     useEffect(() => {
+        if(debouncedQuery && route.pathname !== "/") {
+            navigate("/");
+        }
+
         getBookmarks(debouncedQuery, order);
     }, [debouncedQuery, order]);
 

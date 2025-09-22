@@ -43,9 +43,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar {...props}>
       <SidebarHeader>
       {/* logo */}
-      <div className="flex items-center justify-left">
-        <img src="/logo.svg" alt="logo" className="size-10" />
-        <div className="font-bold">Mark Me</div>
+      <div className="flex flex-row gap-2 items-center justify-left">
+        <img src="/assets/logo.svg" alt="logo" className="size-10 ml-1" />
+        <div className="font-bold font-arial text-[20px]">Mark Me</div>
       </div>
       </SidebarHeader>
       <SidebarContent>
