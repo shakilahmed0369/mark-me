@@ -50,10 +50,11 @@ export const createBookmark = async (bookmark: BookmarkTypes) => {
     return response.data;
 };
 
-export const getBookmarks = async (query?: string) => {
+export const getBookmarks = async (query?: string, order?: string | null) => {
     const response = await api.get("/bookmarks", {
         params: {
             query,
+            order
         }
     });
     return response.data;

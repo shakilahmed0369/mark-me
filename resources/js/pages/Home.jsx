@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import BookmarkCard from "@/components/bookmark-card";
 import { useBookmark } from '@/hooks/useBookmark';
@@ -7,12 +7,7 @@ import ConfirmationDialog from '@/components/confirmation-dialog';
 import Spinner from '@/components/spinner';
 
 export default function Home() {
-    const { isLoading, bookmarks, getBookmarks, confirmationDialog, setConfirmationDialog, deleteBookmark, deleteId, setDeleteId } = useBookmark();
-
-
-    useEffect(() => {
-        getBookmarks();
-    }, []);
+    const { isLoading, bookmarks, confirmationDialog, setConfirmationDialog, deleteBookmark, deleteId, setDeleteId, order, setOrder } = useBookmark();
 
     const breakpointColumnsObj = {
         default: 5,
@@ -30,7 +25,7 @@ export default function Home() {
                     <p className='text-lg text-gray-500'>Effortless Bookmark Management</p>
                 </div>
                 <div className='flex'>
-                    <Button className='h-[50px] bg-neutral-50 text-black border border-gray-500 shadow-none hover:bg-neutral-50 cursor-pointer'> <img src="/assets/icons/order.svg" alt="order" className="w-6 h-6" /> Sort</Button>
+                    <Button onClick={() => setOrder(order === "asc" ? "desc" : "asc")} className='h-[50px] bg-neutral-50 text-black border border-gray-500 shadow-none hover:bg-neutral-50 cursor-pointer'> <img src="/assets/icons/order.svg" alt="order" className="w-6 h-6" /> Sort</Button>
                 </div>
             </div>
             {isLoading ?

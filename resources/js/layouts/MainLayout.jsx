@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { AppSidebar } from "@/components/app-sidebar"
 
 import {
@@ -17,12 +17,13 @@ import { Outlet, useNavigate } from "react-router-dom"
 
 export default function MainLayout() {
     const navigate = useNavigate();
-    const { searchQuery, setSearchQuery, getBookmarks } = useBookmark();
+    const { searchQuery, setSearchQuery, getBookmarks, order } = useBookmark();
+
     const debouncedQuery = useDebounce(searchQuery, 400);
 
     useEffect(() => {
-        getBookmarks(debouncedQuery);
-    }, [debouncedQuery]);
+        getBookmarks(debouncedQuery, order);
+    }, [debouncedQuery, order]);
 
     return (
         <SidebarProvider>

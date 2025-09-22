@@ -11,6 +11,7 @@ export default function BookmarkProvider({ children }: { children: React.ReactNo
     const [confirmationDialog, setConfirmationDialog] = useState(false);
     const [deleteId, setDeleteId] = useState<number | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [order, setOrder] = useState<string>("desc");
 
     const getUrlInfo = async (url: string) => {
         try {
@@ -31,10 +32,10 @@ export default function BookmarkProvider({ children }: { children: React.ReactNo
         }
     }
 
-    const getBookmarks = async (query?: string) => {
+    const getBookmarks = async (query?: string, order?: string | null) => {
         try {
             setIsLoading(true);
-            const data = await getBookmarksApi(query);
+            const data = await getBookmarksApi(query, order);
             setBookmarks(data);
         } catch (error) {
             handleAxiosError(error);
@@ -89,6 +90,8 @@ export default function BookmarkProvider({ children }: { children: React.ReactNo
             setDeleteId,
             searchQuery,
             setSearchQuery,
+            order,
+            setOrder
         }}>
             {children}
         </BookmarkContext.Provider>

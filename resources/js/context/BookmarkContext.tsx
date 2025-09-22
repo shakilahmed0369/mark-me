@@ -9,7 +9,7 @@ interface BookmarkContextType {
     getUrlInfo: (url: string) => Promise<any>;
     urlInfoLoading: boolean;
     createBookmark: (bookmark: BookmarkTypes) => Promise<any>;
-    getBookmarks: () => Promise<void>;
+    getBookmarks: (query?: string, order?: string | null) => Promise<void>;
     getBookmark: (id: number) => Promise<Bookmark | undefined>;
     updateBookmark: (id: number, bookmark: BookmarkTypes) => Promise<Bookmark | undefined>;
     deleteBookmark: (id: number) => Promise<void>;
@@ -19,5 +19,7 @@ interface BookmarkContextType {
     setDeleteId: Dispatch<SetStateAction<number | null>>;
     searchQuery: string;
     setSearchQuery: Dispatch<SetStateAction<string>>;
+    order: string;
+    setOrder: Dispatch<SetStateAction<string>>;
 }
 export const BookmarkContext = createContext<BookmarkContextType | undefined>(undefined);
