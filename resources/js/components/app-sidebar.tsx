@@ -12,13 +12,14 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { NavLink } from "react-router-dom"
+import { NavLink, useLocation } from "react-router-dom"
 
 // This is sample data.
 const data = {
   versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
   navMain: [
     {
+      title: "Main",
       items: [
         {
           title: "Home",
@@ -39,6 +40,7 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { pathname } = useLocation()
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -57,7 +59,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenu>
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={item.isActive}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname === item.url || pathname.startsWith(item.url + "/")}
+                    >
                       <NavLink to={item.url}>{item.title}</NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
