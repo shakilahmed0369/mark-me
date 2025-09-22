@@ -9,7 +9,7 @@ interface BookmarkTypes {
     title: string;
     description: string;
     url: string;
-    category: string;
+    category: { name: string };
     favicon: string;
     favicon_type: string;
 }
@@ -33,7 +33,7 @@ export default function BookmarkCard({ bookmark }: { bookmark: BookmarkTypes }) 
                 <p className='text-sm text-gray-500'>{truncateText(bookmark.description, 200)}</p>
             </a>
 
-            <div className='mt-3 flex justify-between items-center'>
+            <div className='mt-3 flex flex-wrap justify-between items-center md:flex-col md:items-start md:gap-2 lg:flex-row lg:items-center'>
                 <div>
                     <span className='px-2 py-1 bg-gray-800 rounded text-sm text-white'>{bookmark.category.name}</span>
                 </div>

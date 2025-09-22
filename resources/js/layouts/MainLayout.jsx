@@ -34,8 +34,8 @@ export default function MainLayout() {
                         className="mr-2 data-[orientation=vertical]:h-4"
                     />
 
-                    <div className="flex justify-between w-full">
-                        <div>
+                    <div className="flex justify-between w-full gap-2">
+                        <div className="flex-1 min-w-0">
                             <Input
                                 placeholder="Search bookmarks"
                                 value={searchQuery}
@@ -43,7 +43,7 @@ export default function MainLayout() {
                                     setSearchQuery(e.target.value);
                                 }}
                                 type="text"
-                                className="lg:w-2xl md:2 sm:w-1/3 w-full h-[50px]"
+                                className="w-full h-[50px]"
                             />
                         </div>
                         <div>
