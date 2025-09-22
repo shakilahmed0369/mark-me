@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { AppSidebar } from "@/components/app-sidebar"
 
 import {
@@ -7,6 +7,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { useBookmark } from '@/hooks/useBookmark';
+import { useDebounce } from '@/hooks/useDebounce';
 import {
     SidebarInset,
     SidebarProvider,
@@ -17,6 +18,11 @@ import { Outlet, useNavigate } from "react-router-dom"
 export default function MainLayout() {
     const navigate = useNavigate();
     const { searchQuery, setSearchQuery, getBookmarks } = useBookmark();
+    const debouncedQuery = useDebounce(searchQuery, 400);
+
+    useEffect(() => {
+        getBookmarks(debouncedQuery);
+    }, [debouncedQuery]);
 
     return (
         <SidebarProvider>
@@ -33,7 +39,6 @@ export default function MainLayout() {
                         <div>
                             <Input placeholder="Search bookmarks" value={searchQuery} onChange={(e) => {
                                 setSearchQuery(e.target.value);
-                                getBookmarks(e.target.value);
                             }} type="text" className="lg:w-2xl md:2 sm:w-1/3 w-full h-[50px]" />
                         </div>
                         <div>

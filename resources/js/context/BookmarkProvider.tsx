@@ -35,7 +35,6 @@ export default function BookmarkProvider({ children }: { children: React.ReactNo
         try {
             setIsLoading(true);
             const data = await getBookmarksApi(query);
-            console.log(data);
             setBookmarks(data);
         } catch (error) {
             handleAxiosError(error);
