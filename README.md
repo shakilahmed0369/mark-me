@@ -11,6 +11,8 @@
 -   **Categories and bookmarks**: Create and manage bookmarks with categories
 -   **File uploads**: Upload custom image for bookmark
 -   **Auto Fetch**: Fetch site info dynamicly
+-   **Live Search**: Instant live search and ordering
+-   **Responsive**: Full responsive with masonry grid system
 -   **Modern stack**: Laravel API + React, Shadcn, Vite, Tailwind CSS
 
 ## Installation
